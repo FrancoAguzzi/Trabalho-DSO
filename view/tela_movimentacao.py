@@ -13,3 +13,6 @@ class TelaMovimentacao(AbstractTela):
 
     def acesso_pessoa(self):
         pass
+
+    def mostra_informacao(self, info):
+        pass

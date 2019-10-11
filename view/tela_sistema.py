@@ -7,3 +7,6 @@ class TelaSistema(AbstractTela):
 
     def lista_relatorio(self):
         pass
+
+    def mostra_informacao(self, info):
+        pass

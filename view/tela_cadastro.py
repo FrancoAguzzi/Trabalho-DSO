@@ -13,3 +13,6 @@ class TelaCadastro(AbstractTela):
 
     def novo_cadastro(self):
         pass
+
+    def mostra_informacao(self, info):
+        pass
