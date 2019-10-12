@@ -1,14 +1,18 @@
 from control.controlador_cadastro import ControladorCadastro
 from control.controlador_movimentacao import ControladorMovimentacao
-
+from view.tela_sistema import TelaSistema
 
 class ControladorSistema:
 
     def __init__(self):
         self.__controladorCadastro = ControladorCadastro()
+        self.__telaSistema = TelaSistema()
 
     def relatorio(self, filtro):
         pass
+
+    def finalizar(self):
+        exit(0)
 
     def inicia(self):
         print("Iniciando...")
@@ -19,3 +23,11 @@ class ControladorSistema:
         self.__controladorCadastro.lista_usuarios()
         self.__controladorCadastro.lista_segurancas()
         print("Iniciou!")
+        switcher = {0: self.finalizar,
+                    1: self.__controladorCadastro.inclui_usuario,
+                    2: self.__controladorCadastro.lista_usuarios}
+
+        while True:
+            opcao = self.__telaSistema.mostra_informacao({"input": "Selecione a opção: ", "mensagem": "Lista de opções:\n0 -> sair\n1 -> incluir usuario\n2 -> listar usuarios"})
+            funcao_escolhida = switcher[int(opcao)]
+            funcao_escolhida()

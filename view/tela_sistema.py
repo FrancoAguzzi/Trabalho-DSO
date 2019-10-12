@@ -1,5 +1,4 @@
-from abstract_tela import AbstractTela
-from control.controlador_sistema import ControladorSistema
+from view.abstract_tela import AbstractTela
 
 class TelaSistema(AbstractTela):
 
@@ -7,7 +6,8 @@ class TelaSistema(AbstractTela):
         pass
 
     def lista_relatorio(self):
-        print(ControladorSistema.relatorio())
+        pass
 
     def mostra_informacao(self, info):
-        print(info)
+        print(info["mensagem"])
+        return input(info["input"])
