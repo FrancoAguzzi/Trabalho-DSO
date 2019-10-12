@@ -1,3 +1,7 @@
+from model.movimentacao import Movimentacao
+from view.tela_movimentacao import TelaMovimentacao
+
+
 class ControladorMovimentacao:
 
     def __init__(self):

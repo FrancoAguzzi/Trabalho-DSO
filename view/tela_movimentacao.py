@@ -1,6 +1,5 @@
-from abstract_tela import AbstractTela
-from model.movimentacao import Movimentacao
-from control.controlador_movimentacao import ControladorMovimentacao
+from view.abstract_tela import AbstractTela
+
 
 class TelaMovimentacao(AbstractTela):
 
@@ -8,13 +7,13 @@ class TelaMovimentacao(AbstractTela):
         pass
 
     def lista_entrada(self):
-        print(Movimentacao.registro_entrada())
+        print("Lista entrada")
 
     def lista_saida(self):
-        print(Movimentacao.registro_saida())
+        print("Lista saida")
 
     def acesso_pessoa(self):
-        print(ControladorMovimentacao.acesso())
+        print("Acesso pessoa")
 
     def mostra_informacao(self, info):
         print(info)
