@@ -29,5 +29,8 @@ class ControladorSistema:
 
         while True:
             opcao = self.__telaSistema.mostra_informacao({"input": "Selecione a opção: ", "mensagem": "Lista de opções:\n0 -> sair\n1 -> incluir usuario\n2 -> listar usuarios"})
-            funcao_escolhida = switcher[int(opcao)]
-            funcao_escolhida()
+            try:
+                funcao_escolhida = switcher[int(opcao)]
+                funcao_escolhida()
+            except KeyError:
+                print("Opção inválida")
