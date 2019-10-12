@@ -1,6 +1,6 @@
 class Cadastro:
 
-    def __init__(self, usuarios: [] = [], segurancas: [] = []):
+    def __init__(self, usuarios = [], segurancas = []):
         self.__usuarios = usuarios
         self.__segurancas = segurancas
 
