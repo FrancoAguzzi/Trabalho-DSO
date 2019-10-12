@@ -1,9 +1,9 @@
-from pessoa import Pessoa
+from model.pessoa import Pessoa
 
 
 class Usuario(Pessoa):
 
-    def __init__(self, matricula: str):
+    def __init__(self, nome, telefone, matricula: str):
         super().__init__(nome, telefone)
         self.__matricula = matricula
 

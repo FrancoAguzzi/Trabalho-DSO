@@ -1,8 +1,8 @@
-from pessoa import Pessoa
+from model.pessoa import Pessoa
 
 class Seguranca(Pessoa):
 
-    def __init__(self, senha_especial: str, codigo: int):
+    def __init__(self, nome: str, telefone: int, senha_especial: str, codigo: int):
         super().__init__(nome, telefone)
         self.__senha_especial = senha_especial
         self.__codigo = codigo
