@@ -10,16 +10,22 @@ class TelaCadastro(AbstractTela):
         for pessoa in pessoas:
             print(pessoa.nome + " - " + str(pessoa.telefone))
 
-    def novo_cadastro(self, tipo: str = "usuario"):
+    def cadastro(self, tipo: str = "usuario", novo=True):
         respostas = {}
-        print("Novo Cadastro...")
-        respostas["nome"] = input("Nome: ")
-        respostas["telefone"] = input("Telefone: ")
+        if novo:
+            print("Novo Cadastro...")
+        else:
+            print("Atualizando Cadastro...")
+
         if tipo == "usuario":
             respostas["matricula"] = input("Matrícula: ")
         else:
             respostas["codigo"] = input("Código: ")
             respostas["senha_especial"] = input("Senha Especial: ")
+
+        respostas["nome"] = input("Nome: ")
+        respostas["telefone"] = input("Telefone: ")
+
         return respostas
 
     def mostra_informacao(self, info):
