@@ -1,4 +1,6 @@
 from abstract_tela import AbstractTela
+from model.movimentacao import Movimentacao
+from control.controlador_movimentacao import ControladorMovimentacao
 
 class TelaMovimentacao(AbstractTela):
 

@@ -1,5 +1,5 @@
 from abstract_tela import AbstractTela
-from .. import
+from model.cadastro import Cadastro
 
 class TelaCadastro(AbstractTela):
 
@@ -13,11 +13,11 @@ class TelaCadastro(AbstractTela):
         print(Cadastro.segurancas())
 
     def novo_cadastro(self):
-        print(info)
         respostas = {}
         respostas.nome = input("Nome: ")
         respostas.telefone = input("Telefone: ")
         respostas.matricula = input("Matrícula: ")
+        return respostas
 
     def mostra_informacao(self, info):
         print(info)
