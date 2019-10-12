@@ -6,13 +6,13 @@ class TelaMovimentacao(AbstractTela):
         pass
 
     def lista_entrada(self):
-        pass
+        print(Movimentacao.registro_entrada())
 
     def lista_saida(self):
-        pass
+        print(Movimentacao.registro_saida())
 
     def acesso_pessoa(self):
-        pass
+        print(ControladorMovimentacao.acesso())
 
     def mostra_informacao(self, info):
-        pass
+        print(info)

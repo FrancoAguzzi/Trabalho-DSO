@@ -9,4 +9,4 @@ class TelaSistema(AbstractTela):
         pass
 
     def mostra_informacao(self, info):
-        pass
+        print(info)

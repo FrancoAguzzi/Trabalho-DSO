@@ -1,4 +1,5 @@
 from abstract_tela import AbstractTela
+from .. import
 
 class TelaCadastro(AbstractTela):
 
@@ -6,13 +7,17 @@ class TelaCadastro(AbstractTela):
         pass
 
     def lista_usuario(self):
-        pass
+        print(Cadastro.usuarios())
 
     def lista_seguranca(self):
-        pass
+        print(Cadastro.segurancas())
 
     def novo_cadastro(self):
-        pass
+        print(info)
+        respostas = {}
+        respostas.nome = input("Nome: ")
+        respostas.telefone = input("Telefone: ")
+        respostas.matricula = input("Matrícula: ")
 
     def mostra_informacao(self, info):
-        pass
+        print(info)
