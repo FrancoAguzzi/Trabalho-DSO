@@ -66,11 +66,33 @@ class ControladorMovimentacao:
     def atualiza_entrada(self, registro):
         pass
 
-    def inclui_saida(self, registro):
-        pass
+    def inclui_saida(self, matricula = None, codigo = None):
+        if matricula == None and codigo == None:
+            raise  # Falta Parâmetros Exception
+        elif matricula != None and codigo != None:
+            raise  # Informação Duplicada Exception
+        elif matricula != None:
+            for usuario in Cadastro.usuarios:
+                if usuario.matricula == matricula:
+                    saida_usuario = Registro(datetime.datetime.now(), matricula)
+                    Movimentacao.registro_entrada.append(saida_usuario)
+            return saida_usuario
+        elif codigo != None:
+            for seguranca in Cadastro.segurancas:
+                if seguranca.codigo == codigo:
+                    saida_seguranca = Registro(datetime.datetime.now(), codigo)
+                    Movimentacao.registro_entrada.append(saida_seguranca)
+            return saida_seguranca
 
-    def exclui_saida(self, registro):
-        pass
+    def exclui_saida(self, matricula = None, codigo = None):
+        """if matricula == None and codigo == None:
+            raise  # Falta Parâmetros Exception
+        elif matricula != None and codigo != None:
+            raise  # Informação Duplicada Exception
+        elif matricula != None:
+            for usuario in Cadastro.usuarios:
+                if usuario.matricula == matricula:
+                    Movimentacao.registro_saida.remove()"""
 
     def atualiza_saida(self, registro):
         pass
