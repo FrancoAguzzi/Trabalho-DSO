@@ -15,15 +15,19 @@ class ControladorCadastro:
             if respostas is None:
                 respostas = self.__telaCadastro.cadastro()
             usuario = Usuario(respostas["nome"], respostas["telefone"], respostas["matricula"])
+            for user in self.__cadastro.usuarios:
+                if usuario.matricula == user.matricula:
+                    raise Exception("Mudar o nome dessa exception")
             self.__cadastro.usuarios.append(usuario)
             return usuario
         except:
             print("Adicionar aqui uma except")
 
-    def exclui_usuario(self, matricula):
+    def exclui_usuario(self):
         try:
+            respostas = self.__telaCadastro.excluir()
             for usuario in self.__cadastro.usuarios:
-                if usuario.matricula == matricula:
+                if usuario.matricula == respostas["id"]:
                     self.__cadastro.usuarios.remove(usuario)
                     return usuario
         except:
@@ -55,16 +59,22 @@ class ControladorCadastro:
                 respostas = self.__telaCadastro.cadastro(tipo = "seguranca")
             seguranca = Seguranca(respostas["nome"], respostas["telefone"],
                                   respostas["senha_especial"], respostas["codigo"])
+            for seg in self.__cadastro.segurancas:
+                if seg.codigo == seg.codigo:
+                    raise Exception("Mudar o nome dessa exception")
             self.__cadastro.segurancas.append(seguranca)
             return seguranca
         except:
             print("Adicionar aqui uma except")
 
-    def exclui_seguranca(self, codigo):
+    def exclui_seguranca(self):
         try:
+            respostas = self.__telaCadastro.excluir()
             for seguranca in self.__cadastro.segurancas:
-                if seguranca.codigo == codigo:
+                if seguranca.codigo == int(respostas["id"]):
                     self.__cadastro.segurancas.remove(seguranca)
+                    return
+            print("Adicionar aqui um raise???")
         except:
             print("Adicionar aqui uma except")
 

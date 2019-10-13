@@ -7,8 +7,13 @@ class TelaCadastro(AbstractTela):
 
     def lista_pessoas(self, pessoas: []):
         print("Listando...")
+        print("Nome\t-\tTelefone\t-\tId")
         for pessoa in pessoas:
-            print(pessoa.nome + " - " + str(pessoa.telefone))
+            print(pessoa.nome
+                  + "\t-\t"
+                  + str(pessoa.telefone)
+                  + "\t-\t"
+                  + (str(pessoa.codigo) if hasattr(pessoa, "codigo") else pessoa.matricula))
 
     def cadastro(self, tipo: str = "usuario", novo=True):
         respostas = {}
@@ -26,6 +31,11 @@ class TelaCadastro(AbstractTela):
         respostas["nome"] = input("Nome: ")
         respostas["telefone"] = input("Telefone: ")
 
+        return respostas
+
+    def excluir(self):
+        respostas = {}
+        respostas["id"] = input("Digite o identificador da pessoa a ser excluida (código/matrícula): ")
         return respostas
 
     def mostra_informacao(self, info):
