@@ -2,6 +2,7 @@ from model.usuario import Usuario
 from model.seguranca import Seguranca
 from view.tela_cadastro import TelaCadastro
 from model.cadastro import Cadastro
+from model.tipo import TipoPessoa
 
 
 class ControladorCadastro:
@@ -10,10 +11,14 @@ class ControladorCadastro:
         self.__cadastro = Cadastro()
         self.__telaCadastro = TelaCadastro()
 
-    def inclui_usuario(self, respostas = None):
+    @property
+    def cadastro(self):
+        return self.__cadastro
+
+    def inclui_usuario(self, respostas=None):
         try:
             if respostas is None:
-                respostas = self.__telaCadastro.cadastro()
+                respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.USUARIO)
             usuario = Usuario(respostas["nome"], respostas["telefone"], respostas["matricula"])
             for user in self.__cadastro.usuarios:
                 if usuario.matricula == user.matricula:
@@ -36,7 +41,7 @@ class ControladorCadastro:
     def atualiza_usuario(self):
         atualizado = False
         try:
-            respostas = self.__telaCadastro.cadastro(novo = False)
+            respostas = self.__telaCadastro.cadastro(novo=False, tipo=TipoPessoa.USUARIO)
             for usuario in self.__cadastro.usuarios:
                 if usuario.matricula == respostas["matricula"]:
                     atualizado = True
@@ -56,7 +61,7 @@ class ControladorCadastro:
     def inclui_seguranca(self, respostas=None):
         try:
             if respostas is None:
-                respostas = self.__telaCadastro.cadastro(tipo = "seguranca")
+                respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.SEGURANCA)
             seguranca = Seguranca(respostas["nome"], respostas["telefone"],
                                   respostas["senha_especial"], respostas["codigo"])
             for seg in self.__cadastro.segurancas:
@@ -81,7 +86,7 @@ class ControladorCadastro:
     def atualiza_seguranca(self):
         atualizado = False
         try:
-            respostas = self.__telaCadastro.cadastro(tipo = "seguranca", novo = False)
+            respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.SEGURANCA, novo = False)
             for seguranca in self.__cadastro.segurancas:
                 if seguranca.codigo == respostas["codigo"]:
                     atualizado = True

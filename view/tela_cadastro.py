@@ -1,5 +1,6 @@
 from view.abstract_tela import AbstractTela
 from getpass import getpass
+from model.tipo import TipoPessoa
 
 class TelaCadastro(AbstractTela):
 
@@ -16,14 +17,14 @@ class TelaCadastro(AbstractTela):
                   + "\t-\t"
                   + (str(pessoa.codigo) if hasattr(pessoa, "codigo") else pessoa.matricula))
 
-    def cadastro(self, tipo: str = "usuario", novo=True):
+    def cadastro(self, tipo: TipoPessoa, novo=True):
         respostas = {}
         if novo:
             print("Novo Cadastro...")
         else:
             print("Atualizando Cadastro...")
 
-        if tipo == "usuario":
+        if tipo == TipoPessoa.USUARIO:
             respostas["matricula"] = input("Matrícula: ")
         else:
             respostas["codigo"] = input("Código: ")
