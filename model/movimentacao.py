@@ -1,9 +1,14 @@
 class Movimentacao:
 
-    def __init__(self, registro_entrada = [], registro_saida = [], vagas: int):
+    def __init__(self, registro_entrada = [], registro_saida = [], vagas: int = 0):
         self.__registro_entrada = registro_entrada
         self.__registro_saida = registro_saida
         self.__vagas = vagas
+        self.__registros = []
+
+    @property
+    def registros(self):
+        return self.__registros
 
     @property
     def registro_entrada(self):

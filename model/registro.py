@@ -1,9 +1,13 @@
+from model.tipo import TipoRegistro
+
+
 class Registro:
 
-    def __init__(self, timestamp: Date, matricula = None, codigo = None):
+    def __init__(self, timestamp, tipo: TipoRegistro, matricula=None, codigo=None):
         self.__timestamp = timestamp
         self.__matricula = matricula
         self.__codigo = codigo
+        self.__tipo = tipo
 
     @property
     def timestamp(self):
@@ -12,6 +16,14 @@ class Registro:
     @timestamp.setter
     def timestamp(self, timestamp):
         self.__timestamp = timestamp
+
+    @property
+    def tipo(self):
+        return self.__tipo
+
+    @tipo.setter
+    def tipo(self, tipo):
+        self.__tipo = tipo
 
     @property
     def matricula(self):

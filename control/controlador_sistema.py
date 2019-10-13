@@ -7,6 +7,7 @@ class ControladorSistema:
 
     def __init__(self):
         self.__controladorCadastro = ControladorCadastro()
+        self.__controladorMovimentacao = ControladorMovimentacao(self.__controladorCadastro)
         self.__telaSistema = TelaSistema()
 
     def relatorio(self, filtro):
@@ -43,33 +44,32 @@ class ControladorSistema:
             try:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
-            except KeyError:
+            except (KeyError, ValueError):
                 print("Opção inválida!")
 
     def menu_movimentacao(self):
         switcher = {
             0: self.retornar,
-            1: self.__controladorCadastro.inclui_entrada,
-            2: self.__controladorCadastro.lista_usuarios,
-            3: self.__controladorCadastro.atualiza_usuario,
-            4: self.__controladorCadastro.inclui_seguranca,
-            5: self.__controladorCadastro.lista_segurancas,
-            6: self.__controladorCadastro.atualiza_seguranca
+            1: self.__controladorMovimentacao.acesso,
+            2: self.__controladorMovimentacao.atualiza_entrada,
+            3: self.__controladorMovimentacao.atualiza_saida,
+            4: self.__controladorMovimentacao.exclui_entrada,
+            5: self.__controladorMovimentacao.exclui_saida,
         }
         opcao = -1
         while int(opcao) != 0:
             opcao = self.__telaSistema.mostra_informacao({
                 "input": "Selecione a opção: ",
                 "mensagem": "Lista de opções:"
-                            "\n0 -> retornar"
-                            "\n1 -> incluir usuário\n2 -> listar usuários\n3 -> atualizar usuário"
-                            "\n4 -> incluir segurança\n5 -> listar seguranças\n6 -> atualizar segurança"
+                            "\n0 -> retornar\n1 -> acessar"
+                            "\n2 -> atualizar entrada\n3 -> atualizar saída"
+                            "\n4 -> excluir entrada\n5 -> excluir saída"
             })
             self.__telaSistema.limpar_tela()
             try:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
-            except KeyError:
+            except (KeyError, ValueError):
                 print("Opção inválida!")
 
     def inicia(self):
@@ -97,5 +97,5 @@ class ControladorSistema:
             try:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
-            except KeyError:
+            except (KeyError, ValueError):
                 print("Opção inválida")

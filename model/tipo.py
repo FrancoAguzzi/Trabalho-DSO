@@ -9,3 +9,4 @@ class TipoPessoa(Enum):
 class TipoRegistro(Enum):
     ENTRADA = 1
     SAIDA = 2
+    ESPECIAL = 3
