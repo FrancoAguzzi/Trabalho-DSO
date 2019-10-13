@@ -1,4 +1,5 @@
 from view.abstract_tela import AbstractTela
+from getpass import getpass
 
 class TelaCadastro(AbstractTela):
 
@@ -26,7 +27,7 @@ class TelaCadastro(AbstractTela):
             respostas["matricula"] = input("Matrícula: ")
         else:
             respostas["codigo"] = input("Código: ")
-            respostas["senha_especial"] = input("Senha Especial: ")
+            respostas["senha_especial"] = getpass("Senha Especial: ")
 
         respostas["nome"] = input("Nome: ")
         respostas["telefone"] = input("Telefone: ")
