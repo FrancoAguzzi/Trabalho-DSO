@@ -1,4 +1,5 @@
 from view.abstract_tela import AbstractTela
+from model.movimentacao import Movimentacao
 
 
 class TelaMovimentacao(AbstractTela):
@@ -8,12 +9,12 @@ class TelaMovimentacao(AbstractTela):
 
     def lista_entrada(self):
         print("Lista entrada")
+        return Movimentacao.registro_entrada
 
     def lista_saida(self):
         print("Lista saida")
-
-    def acesso_pessoa(self):
-        print("Acesso pessoa")
+        return Movimentacao.registro_saida
 
     def mostra_informacao(self, info):
-        print(info)
+        print(info["mensagem"])
+        return input(info["input"])

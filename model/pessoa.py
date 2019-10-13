@@ -1,6 +1,6 @@
 class Pessoa:
 
-    def __init__(self, nome:str, telefone: int):
+    def __init__(self, nome: str, telefone: int):
         self.__nome = nome
         self.__telefone = telefone
 
