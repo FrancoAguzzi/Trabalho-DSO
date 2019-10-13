@@ -60,7 +60,7 @@ class ControladorCadastro:
             seguranca = Seguranca(respostas["nome"], respostas["telefone"],
                                   respostas["senha_especial"], respostas["codigo"])
             for seg in self.__cadastro.segurancas:
-                if seg.codigo == seg.codigo:
+                if seguranca.codigo == seg.codigo:
                     raise Exception("Mudar o nome dessa exception")
             self.__cadastro.segurancas.append(seguranca)
             return seguranca
