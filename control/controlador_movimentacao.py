@@ -6,12 +6,17 @@ from datetime import *
 from model.tipo import TipoRegistro
 from exception.exception_movimentacao import *
 
+
 class ControladorMovimentacao:
 
     def __init__(self, controlador_cadastro):
-        self.__movimentacao = Movimentacao(vagas=1)
+        self.__movimentacao = Movimentacao(vagas=10)
         self.__controladorCadastro = controlador_cadastro
         self.__telaMovimentacao = TelaMovimentacao()
+
+    @property
+    def registros(self):
+        return self.__movimentacao.registros
 
     def acesso(self):
         opcao = self.__telaMovimentacao.mostra_informacao({
@@ -84,7 +89,7 @@ class ControladorMovimentacao:
     def atualiza_entrada(self, registro):
         pass
 
-    def exclui_saida(self, matricula = None, codigo = None):
+    def exclui_saida(self, matricula=None, codigo=None):
         pass
 
     def atualiza_saida(self, registro):

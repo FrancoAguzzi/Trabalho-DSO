@@ -2,8 +2,8 @@ from enum import Enum
 
 
 class TipoPessoa(Enum):
-    SEGURANCA = 1
-    USUARIO = 2
+    USUARIO = 1
+    SEGURANCA = 2
 
 
 class TipoRegistro(Enum):

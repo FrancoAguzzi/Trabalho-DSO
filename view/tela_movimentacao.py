@@ -1,5 +1,5 @@
 from view.abstract_tela import AbstractTela
-from model.movimentacao import Movimentacao
+from model.tipo import TipoRegistro
 from getpass import getpass
 
 
@@ -8,13 +8,11 @@ class TelaMovimentacao(AbstractTela):
     def __init__(self):
         pass
 
-    def lista_entrada(self):
-        print("Lista entrada")
-        return Movimentacao.registro_entrada
-
-    def lista_saida(self):
-        print("Lista saida")
-        return Movimentacao.registro_saida
+    def lista_registros(self, registros, tipo_registro: TipoRegistro):
+        print("Lista " + tipo_registro.name + ": ")
+        for registro in registros:
+            if registro.tipo == TipoRegistro:
+                print(registro)
 
     def acesso_pessoa(self, tipo: str = "usuario"):
         print("Acesso de " + tipo)
