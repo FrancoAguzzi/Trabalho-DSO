@@ -4,6 +4,7 @@ from model.cadastro import Cadastro
 from model.registro import Registro
 from datetime import *
 from model.tipo import TipoRegistro
+from exception.exception_movimentacao import *
 
 class ControladorMovimentacao:
 
@@ -45,7 +46,7 @@ class ControladorMovimentacao:
                                                  ))
                                     print("Coloque sua bicicleta em um local disponível")
                                 else:
-                                    raise  # Bicicletário Lotado Exception
+                                    raise BicicletarioLotadoException
                             print("Acesso Liberado " + usuario.nome)
                             return
                     if self.__movimentacao.vagas > 0:
@@ -55,12 +56,12 @@ class ControladorMovimentacao:
                                      tipo=TipoRegistro.ENTRADA,
                                      matricula=respostas["matricula"]
                                      ))
-                        print("Coloque sua bicicleta em um local disponóivel")
+                        print("Coloque sua bicicleta em um local disponível")
                         print("Acesso Liberado " + usuario.nome)
                         return
                     else:
-                        raise # Bicicletario Lotado Exception
-            raise # Matricula Invalida Exception
+                        raise BicicletarioLotadoException
+            raise MatriculaInvalidaException
         elif opcao == "2":
             segurancas = self.__controladorCadastro.cadastro.segurancas
             respostas = self.__telaMovimentacao.acesso_pessoa(tipo="segurança")
@@ -73,7 +74,7 @@ class ControladorMovimentacao:
                                  ))
                     print("Acesso Liberado " + seguranca.nome)
                 else:
-                    raise #Código e Senha Invalido Exception
+                    raise CodigoSenhaInvalidoException
         else:
             print("Opção inválida, retornando")
 

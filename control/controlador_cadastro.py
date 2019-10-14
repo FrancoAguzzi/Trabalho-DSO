@@ -3,6 +3,7 @@ from model.seguranca import Seguranca
 from view.tela_cadastro import TelaCadastro
 from model.cadastro import Cadastro
 from model.tipo import TipoPessoa
+from exception.exception_cadastro import *
 
 
 class ControladorCadastro:
@@ -22,7 +23,7 @@ class ControladorCadastro:
             usuario = Usuario(respostas["nome"], respostas["telefone"], respostas["matricula"])
             for user in self.__cadastro.usuarios:
                 if usuario.matricula == user.matricula:
-                    raise Exception("Mudar o nome dessa exception")
+                    raise UsuarioDuplicadoException
             self.__cadastro.usuarios.append(usuario)
             return usuario
         except:
@@ -35,6 +36,7 @@ class ControladorCadastro:
                 if usuario.matricula == respostas["id"]:
                     self.__cadastro.usuarios.remove(usuario)
                     return usuario
+            print MatriculaInvalidaException
         except:
             print("Adicionar aqui uma except")
 
@@ -50,8 +52,7 @@ class ControladorCadastro:
                     if respostas["telefone"]:
                         usuario.telefone = respostas["telefone"]
             if not atualizado:
-                print("criar uma except padrao e extender dela conforme exemplo do professor")
-                #raise Exception("")
+                raise MatriculaInvalidaException
         except:
             print("Adicionar aqui uma except")
 
@@ -66,7 +67,7 @@ class ControladorCadastro:
                                   respostas["senha_especial"], respostas["codigo"])
             for seg in self.__cadastro.segurancas:
                 if seguranca.codigo == seg.codigo:
-                    raise Exception("Mudar o nome dessa exception")
+                    raise SegurancaDuplicadoException
             self.__cadastro.segurancas.append(seguranca)
             return seguranca
         except:
@@ -79,7 +80,7 @@ class ControladorCadastro:
                 if seguranca.codigo == int(respostas["id"]):
                     self.__cadastro.segurancas.remove(seguranca)
                     return
-            print("Adicionar aqui um raise???")
+            print CodigoInvalidoException
         except:
             print("Adicionar aqui uma except")
 
@@ -97,8 +98,7 @@ class ControladorCadastro:
                     if respostas["senha_especial"]:
                         seguranca.senha_especial = respostas["senha_especial"]
             if not atualizado:
-                print("criar uma except padrao e extender dela conforme exemplo do professor")
-                # raise Exception("")
+                raise CodigoInvalidoException
         except:
             print("Adicionar aqui uma except")
 
