@@ -1,6 +1,10 @@
 class Cadastro:
 
-    def __init__(self, usuarios = [], segurancas = []):
+    def __init__(self, usuarios=None, segurancas=None):
+        if segurancas is None:
+            segurancas = []
+        if usuarios is None:
+            usuarios = []
         self.__usuarios = usuarios
         self.__segurancas = segurancas
 

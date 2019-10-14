@@ -1,5 +1,6 @@
 from model.pessoa import Pessoa
 
+
 class Seguranca(Pessoa):
 
     def __init__(self, nome: str, telefone: int, senha_especial: str, codigo: int):

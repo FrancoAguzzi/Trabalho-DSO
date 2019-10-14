@@ -1,23 +1,36 @@
 from view.abstract_tela import AbstractTela
 from model.tipo import TipoPessoa
 
+
 class TelaSistema(AbstractTela):
 
     def __init__(self):
-        pass
+        super().__init__()
 
-    def lista_relatorio(self, registros):
-        print("Timestamp\t-\tIdentificador\t-\tPessoa\t-\tTipo")
+    def lista_relatorio(self, registros, cadastros):
+        print("Timestamp\t\t-\tIdent.\t-\tNome\t-\tTipo Pessoa\t-\tTipo")
         for registro in registros:
-            identificador = registro.matricula if registro.matricula is not None else str(registro.codigo)
             tipo_pessoa = TipoPessoa.USUARIO if registro.matricula is not None else TipoPessoa.SEGURANCA
+            if tipo_pessoa == tipo_pessoa.USUARIO:
+                identificador = registro.matricula
+                nome = next(filter(lambda c:
+                                   c.matricula == registro.matricula, cadastros.usuarios
+                                   ), "Não encontrado").nome
+            else:
+                identificador = str(registro.codigo)
+                nome = next(filter(lambda c:
+                                   c.codigo == registro.codigo, cadastros.segurancas
+                                   ), "Não encontrado").nome
+
             print(
                 registro.timestamp.strftime("%d-%m-%Y %H:%M:%S")
                 + "\t-\t"
                 + identificador
                 + "\t-\t"
-                + tipo_pessoa.name
+                + nome
                 + "\t-\t"
+                + tipo_pessoa.name
+                + " \t-\t"
                 + registro.tipo.name
             )
 

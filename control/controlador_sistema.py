@@ -3,7 +3,12 @@ from control.controlador_movimentacao import ControladorMovimentacao
 from view.tela_sistema import TelaSistema
 from model.tipo import TipoPessoa, TipoRegistro
 from model.registro import Registro
+from model.sistema import Sistema
 from datetime import *
+from exception.exception_cadastro import *
+from exception.exception_movimentacao import *
+from exception.exception_sistema import *
+
 
 class ControladorSistema:
 
@@ -11,30 +16,35 @@ class ControladorSistema:
         self.__controladorCadastro = ControladorCadastro()
         self.__controladorMovimentacao = ControladorMovimentacao(self.__controladorCadastro)
         self.__telaSistema = TelaSistema()
+        self.__sistema = Sistema(
+            cadastro=self.__controladorCadastro.cadastro,
+            movimentacao=self.__controladorMovimentacao.movimentacao
+        )
 
     def aplica_filtro(self, filtro, registros):
         if filtro["chave"] == "identificador":
-            return filter(lambda r: r.codigo == filtro["valor"] if r.codigo is not None else r.matricula == filtro["valor"], registros)
+            return filter(lambda r:
+                          r.codigo == filtro["valor"] if r.codigo is not None else r.matricula == filtro["valor"],
+                          registros)
         if filtro["chave"] == "tipo_pessoa":
             return filter(lambda r:
                           r.matricula is not None if filtro["valor"] == TipoPessoa.USUARIO else r.codigo is not None,
                           registros)
         if filtro["chave"] == "timestamp":
             return filter(lambda r: r.timestamp.strftime("%d-%m-%Y") == filtro["valor"].strftime("%d-%m-%Y"), registros)
-
         return filter(lambda r: getattr(r, filtro["chave"]) == filtro["valor"], registros)
 
     def relatorio(self, filtro=None):
-        registros = self.__controladorMovimentacao.registros
+        registros = self.__sistema.movimentacao.registros
         if filtro is not None:
             registros = self.aplica_filtro(filtro, registros)
-        self.__telaSistema.lista_relatorio(registros)
+        self.__telaSistema.lista_relatorio(registros, self.__sistema.cadastro)
 
     def finalizar(self):
         exit(0)
 
     def retornar(self):
-        print("retornando...")
+        print("Retornando...")
 
     def menu_relatorio(self):
         opcao = self.__telaSistema.mostra_informacao({
@@ -101,15 +111,25 @@ class ControladorSistema:
                 "input": "Selecione a opção: ",
                 "mensagem": "Lista de opções:"
                             "\n0 -> retornar"
-                            "\n1 -> incluir usuário\n2 -> listar usuários\n3 -> atualizar usuário\n4 -> excluir usuário"
-                            "\n5 -> incluir segurança\n6 -> listar seguranças\n7 -> atualizar segurança\n8 -> excluir segurança"
+                            "\n1 -> incluir usuário\n2 -> listar usuários"
+                            "\n3 -> atualizar usuário\n4 -> excluir usuário"
+                            "\n5 -> incluir segurança\n6 -> listar seguranças"
+                            "\n7 -> atualizar segurança\n8 -> excluir segurança"
             })
             self.__telaSistema.limpar_tela()
             try:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, OpcaoInvalidaException):
                 print("Opção inválida!")
+            except MatriculaInvalidaException:
+                print("Matrícula inválida!")
+            except UsuarioDuplicadoException:
+                print("Matrícula já cadastrada!")
+            except CodigoInvalidoException:
+                print("Código inválido!")
+            except SegurancaDuplicadoException:
+                print("Cógido já cadastrado!")
 
     def menu_movimentacao(self):
         switcher = {
@@ -133,29 +153,37 @@ class ControladorSistema:
             try:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, OpcaoInvalidaException):
                 print("Opção inválida!")
+            except CodigoSenhaInvalidoException:
+                print("Código e/ou senha inválido(s)!")
+            except MatriculaInvalidaException:
+                print("Matrícula inválida!")
+            except BicicletarioLotadoException:
+                print("Bicicletário lotado!")
 
     def inicia(self):
         print("Iniciando...")
         print("Criando usuários e seguranças padrão...")
-        self.__controladorCadastro.inclui_usuario({"nome": "Fulano", "telefone": 12312300, "matricula": "123"})
-        self.__controladorCadastro.inclui_seguranca({"nome": "Zé", "telefone": 32132100, "codigo": 1, "senha_especial": "senha"})
+        self.__controladorCadastro\
+            .inclui_usuario({"nome": "Fulano", "telefone": 12312300, "matricula": "123"})
+        self.__controladorCadastro\
+            .inclui_seguranca({"nome": "Zé", "telefone": 32132100, "codigo": 1, "senha_especial": "senha"})
         print("Usuários e Seguranças criados!")
         print("Criando registros padrão...")
-        self.__controladorMovimentacao.registros.append(
+        self.__sistema.movimentacao.registros.append(
             Registro(
                 timestamp=datetime(2019, 9, 5, 11, 30, 5, 0),
                 tipo=TipoRegistro.ENTRADA,
                 matricula="123"
             ))
-        self.__controladorMovimentacao.registros.append(
+        self.__sistema.movimentacao.registros.append(
             Registro(
                 timestamp=datetime(2019, 9, 6, 12, 50, 15, 0),
                 tipo=TipoRegistro.SAIDA,
                 matricula="123"
             ))
-        self.__controladorMovimentacao.registros.append(
+        self.__sistema.movimentacao.registros.append(
             Registro(
                 timestamp=datetime(2019, 9, 5, 8, 10, 0, 0),
                 tipo=TipoRegistro.ESPECIAL,
@@ -183,5 +211,5 @@ class ControladorSistema:
             try:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
-            except (KeyError, ValueError):
-                print("Opção inválida")
+            except (KeyError, ValueError, OpcaoInvalidaException):
+                print("Opção inválida!")

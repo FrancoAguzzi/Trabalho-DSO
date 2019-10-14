@@ -2,10 +2,11 @@ from view.abstract_tela import AbstractTela
 from getpass import getpass
 from model.tipo import TipoPessoa
 
+
 class TelaCadastro(AbstractTela):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def lista_pessoas(self, pessoas: []):
         print("Listando...")
@@ -36,8 +37,7 @@ class TelaCadastro(AbstractTela):
         return respostas
 
     def excluir(self):
-        respostas = {}
-        respostas["id"] = input("Digite o identificador da pessoa a ser excluida (código/matrícula): ")
+        respostas = {"id": input("Digite o identificador da pessoa a ser excluida (código/matrícula): ")}
         return respostas
 
     def mostra_informacao(self, info):

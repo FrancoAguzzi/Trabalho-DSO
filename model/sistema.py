@@ -1,9 +1,6 @@
-from cadastro import Cadastro
-from movimentacao import Movimentacao
-
 class Sistema:
 
-    def __init__(self, cadastro = Cadastro(), movimentacao = Movimentacao()):
+    def __init__(self, cadastro, movimentacao):
         self.__cadastro = cadastro
         self.__movimentacao = movimentacao
 

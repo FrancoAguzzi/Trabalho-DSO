@@ -6,7 +6,7 @@ from getpass import getpass
 class TelaMovimentacao(AbstractTela):
 
     def __init__(self):
-        pass
+        super().__init__()
 
     def lista_registros(self, registros, tipo_registro: TipoRegistro):
         print("Lista " + tipo_registro.name + ": ")
@@ -17,7 +17,7 @@ class TelaMovimentacao(AbstractTela):
     def acesso_pessoa(self, tipo: str = "usuario"):
         print("Acesso de " + tipo)
         respostas = {}
-        if(tipo == "usuario"):
+        if tipo == "usuario":
             respostas["matricula"] = input("Informe sua matrícula: ")
             return respostas
         else:

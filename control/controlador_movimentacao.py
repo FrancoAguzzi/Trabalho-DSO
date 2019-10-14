@@ -1,10 +1,11 @@
 from model.movimentacao import Movimentacao
 from view.tela_movimentacao import TelaMovimentacao
-from model.cadastro import Cadastro
 from model.registro import Registro
 from datetime import *
 from model.tipo import TipoRegistro
 from exception.exception_movimentacao import *
+from exception.exception_cadastro import *
+from exception.exception_sistema import *
 
 
 class ControladorMovimentacao:
@@ -13,6 +14,10 @@ class ControladorMovimentacao:
         self.__movimentacao = Movimentacao(vagas=10)
         self.__controladorCadastro = controlador_cadastro
         self.__telaMovimentacao = TelaMovimentacao()
+
+    @property
+    def movimentacao(self):
+        return self.__movimentacao
 
     @property
     def registros(self):
@@ -81,7 +86,7 @@ class ControladorMovimentacao:
                 else:
                     raise CodigoSenhaInvalidoException
         else:
-            print("Opção inválida, retornando")
+            raise OpcaoInvalidaException
 
     def exclui_entrada(self, registro):
         pass
