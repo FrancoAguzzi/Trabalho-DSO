@@ -87,15 +87,3 @@ class ControladorMovimentacao:
                     raise CodigoSenhaInvalidoException
         else:
             raise OpcaoInvalidaException
-
-    def exclui_entrada(self, registro):
-        pass
-
-    def atualiza_entrada(self, registro):
-        pass
-
-    def exclui_saida(self, matricula=None, codigo=None):
-        pass
-
-    def atualiza_saida(self, registro):
-        pass
