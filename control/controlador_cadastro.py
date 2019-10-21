@@ -30,6 +30,7 @@ class ControladorCadastro:
         respostas = self.__telaCadastro.excluir()
         for usuario in self.__cadastro.usuarios:
             if usuario.matricula == respostas["id"]:
+                # Faltou validação se o usuário não está em um registro
                 self.__cadastro.usuarios.remove(usuario)
                 return usuario
         raise MatriculaInvalidaException
@@ -65,6 +66,7 @@ class ControladorCadastro:
         respostas = self.__telaCadastro.excluir()
         for seguranca in self.__cadastro.segurancas:
             if seguranca.codigo == int(respostas["id"]):
+                # Faltou validação se o segurança não está em um registro
                 self.__cadastro.segurancas.remove(seguranca)
                 return
         raise CodigoInvalidoException
