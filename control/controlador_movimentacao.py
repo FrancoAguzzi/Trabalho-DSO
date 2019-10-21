@@ -87,3 +87,69 @@ class ControladorMovimentacao:
                     raise CodigoSenhaInvalidoException
         else:
             raise OpcaoInvalidaException
+
+    def atualiza_acesso(self):
+        opcao = self.__telaMovimentacao.mostra_informacao({
+            "input": "Selecione a opção: ",
+            "mensagem": "Tipo de acesso:"
+                        "\n1 -> Entrada"
+                        "\n2 -> Saída"
+        })
+        if int(opcao) > 2 or int(opcao) < 1:
+            raise OpcaoInvalidaException
+
+        id_pessoa = self.__telaMovimentacao.mostra_informacao({
+            "input": "Digite a matricula: ",
+            "mensagem": "Alterar o acesso de:"
+        })
+
+        for registro in self.__movimentacao.registros:
+            if registro.tipo == TipoRegistro(int(opcao)):
+                if registro.matricula == id_pessoa:
+                    if registro.tipo == TipoRegistro.ENTRADA:
+                        registro.tipo = TipoRegistro.SAIDA
+                        self.__movimentacao.vagas += 1
+                    elif registro.tipo == TipoRegistro.SAIDA:
+                        if self.movimentacao.vagas > 0:
+                            registro.tipo = TipoRegistro.ENTRADA
+                            self.__movimentacao.vagas -= 1
+                        else:
+                            raise BicicletarioLotadoException
+                    print("Registro alterado com sucesso!")
+                    return
+        raise MatriculaInvalidaException
+
+
+    def exclui_acesso(self):
+        opcao = self.__telaMovimentacao.mostra_informacao({
+            "input": "Selecione a opção: ",
+            "mensagem": "Tipo de acesso:"
+                        "\n1 -> Entrada"
+                        "\n2 -> Saída"
+                        "\n3 -> Especial"
+        })
+        if int(opcao) > 3 or int(opcao) < 1:
+            raise OpcaoInvalidaException
+
+        id_pessoa = self.__telaMovimentacao.mostra_informacao({
+            "input": "Digite o identificador: ",
+            "mensagem": "Remover o acesso de:"
+        })
+
+        for registro in self.__movimentacao.registros:
+            if registro.tipo == TipoRegistro(int(opcao)):
+                if registro.matricula == id_pessoa or registro.codigo == int(id_pessoa):
+                    self.__movimentacao.registros.remove(registro)
+                    if registro.tipo == TipoRegistro.ENTRADA:
+                        self.__movimentacao.vagas += 1
+                    if registro.tipo == TipoRegistro.SAIDA:
+                        if self.movimentacao.vagas > 0:
+                            self.__movimentacao.vagas -= 1
+                        else:
+                            raise BicicletarioLotadoException
+                    print("Registro removido com sucesso!")
+                    return
+        if opcao == "3":
+            raise CodigoInvalidoException
+        else:
+            raise MatriculaInvalidaException

@@ -135,10 +135,8 @@ class ControladorSistema:
         switcher = {
             0: self.retornar,
             1: self.__controladorMovimentacao.acesso,
-            2: self.__controladorMovimentacao.atualiza_entrada,
-            3: self.__controladorMovimentacao.atualiza_saida,
-            4: self.__controladorMovimentacao.exclui_entrada,
-            5: self.__controladorMovimentacao.exclui_saida,
+            2: self.__controladorMovimentacao.atualiza_acesso,
+            3: self.__controladorMovimentacao.exclui_acesso,
         }
         opcao = -1
         while int(opcao) != 0:
@@ -146,8 +144,7 @@ class ControladorSistema:
                 "input": "Selecione a opção: ",
                 "mensagem": "Lista de opções:"
                             "\n0 -> retornar\n1 -> acessar"
-                            "\n2 -> atualizar entrada\n3 -> atualizar saída"
-                            "\n4 -> excluir entrada\n5 -> excluir saída"
+                            "\n2 -> atualizar acesso\n3 -> excluir acesso"
             })
             self.__telaSistema.limpar_tela()
             try:
@@ -159,6 +156,8 @@ class ControladorSistema:
                 print("Código e/ou senha inválido(s)!")
             except MatriculaInvalidaException:
                 print("Matrícula inválida!")
+            except CodigoInvalidoException:
+                print("Código inválido!")
             except BicicletarioLotadoException:
                 print("Bicicletário lotado!")
 
