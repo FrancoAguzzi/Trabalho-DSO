@@ -50,3 +50,6 @@ class TelaSistema(AbstractTela):
         else:
             break
         #adicionar validação da existencia dos registros
+
+    def retorna(self):
+        print("Retornando...")

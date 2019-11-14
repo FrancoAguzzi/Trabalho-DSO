@@ -44,7 +44,7 @@ class ControladorSistema:
         exit(0)
 
     def retornar(self):
-        print("Retornando...")
+        self.__telaSistema.retorna()
 
     def menu_relatorio(self):
         opcao = self.__telaSistema.mostra_informacao({
@@ -91,7 +91,7 @@ class ControladorSistema:
             print(timestamp)
             self.relatorio({"chave": "timestamp", "valor": timestamp})
         else:
-            print("Opção inválida, retornando!")
+            raise OpcaoInvalidaException + '\n' + self.__telaSistema.retorna()
 
     def menu_cadastro(self):
         switcher = {

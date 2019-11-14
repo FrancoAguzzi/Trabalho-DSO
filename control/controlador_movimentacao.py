@@ -45,7 +45,7 @@ class ControladorMovimentacao:
                                              tipo=TipoRegistro.SAIDA,
                                              matricula=respostas["matricula"]
                                              ))
-                                print("Retire sua bicicleta")
+                                self.__telaMovimentacao.movimenta_bicicleta(False)
                             else:
                                 if self.__movimentacao.vagas > 0:
                                     self.__movimentacao.vagas -= 1
@@ -54,10 +54,10 @@ class ControladorMovimentacao:
                                                  tipo=TipoRegistro.ENTRADA,
                                                  matricula=respostas["matricula"]
                                                  ))
-                                    print("Coloque sua bicicleta em um local disponível")
+                                    self.__telaMovimentacao.movimenta_bicicleta()
                                 else:
                                     raise BicicletarioLotadoException
-                            print("Acesso Liberado " + usuario.nome)
+                            self.__telaMovimentacao.libera_acesso() + usuario.nome
                             return
                     if self.__movimentacao.vagas > 0:
                         self.__movimentacao.vagas -= 1
@@ -66,8 +66,8 @@ class ControladorMovimentacao:
                                      tipo=TipoRegistro.ENTRADA,
                                      matricula=respostas["matricula"]
                                      ))
-                        print("Coloque sua bicicleta em um local disponível")
-                        print("Acesso Liberado " + usuario.nome)
+                        self.__telaMovimentacao.movimenta_bicicleta()
+                        self.__telaMovimentacao.libera_acesso() + usuario.nome
                         return
                     else:
                         raise BicicletarioLotadoException
@@ -82,7 +82,7 @@ class ControladorMovimentacao:
                                  tipo=TipoRegistro.ESPECIAL,
                                  codigo=respostas["codigo"]
                                  ))
-                    print("Acesso Liberado " + seguranca.nome)
+                    self.__telaMovimentacao.libera_acesso() + seguranca.nome
                 else:
                     raise CodigoSenhaInvalidoException
         else:
@@ -115,8 +115,7 @@ class ControladorMovimentacao:
                             self.__movimentacao.vagas -= 1
                         else:
                             raise BicicletarioLotadoException
-                    print("Registro alterado com sucesso!")
-                    return
+                    self.__telaMovimentacao.modifica_registro()
         raise MatriculaInvalidaException
 
 
@@ -147,8 +146,7 @@ class ControladorMovimentacao:
                             self.__movimentacao.vagas -= 1
                         else:
                             raise BicicletarioLotadoException
-                    print("Registro removido com sucesso!")
-                    return
+                    self.__telaMovimentacao.modifica_registro(True)
         if opcao == "3":
             raise CodigoInvalidoException
         else:

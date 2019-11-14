@@ -28,3 +28,18 @@ class TelaMovimentacao(AbstractTela):
     def mostra_informacao(self, info):
         print(info["mensagem"])
         return input(info["input"])
+
+    def movimenta_bicicleta(self, n=True):
+        if n:
+            print("Coloque sua bicicleta em um local disponível")
+        else:
+            print("Retire sua bicicleta")
+
+    def libera_acesso(self):
+        print("Acesso Liberado, ")
+
+    def modifica_registro(self, n=False):
+        acao = "alterado"
+        if n:
+            acao = "removido"
+        return "Registro " + acao + " com sucesso!"
