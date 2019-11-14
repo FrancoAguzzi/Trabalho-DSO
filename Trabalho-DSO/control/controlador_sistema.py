@@ -121,24 +121,22 @@ class ControladorSistema:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
             except (KeyError, ValueError, OpcaoInvalidaException):
-                raise OpcaoInvalidaException
+                print("Opção inválida!")
             except MatriculaInvalidaException:
-                raise MatriculaInvalidaException
+                print("Matrícula inválida!")
             except UsuarioDuplicadoException:
-                raise UsuarioDuplicadoException
+                print("Matrícula já cadastrada!")
             except CodigoInvalidoException:
-                raise CodigoInvalidoException
+                print("Código inválido!")
             except SegurancaDuplicadoException:
-                raise SegurancaDuplicadoException
+                print("Cógido já cadastrado!")
 
     def menu_movimentacao(self):
         switcher = {
             0: self.retornar,
             1: self.__controladorMovimentacao.acesso,
-            2: self.__controladorMovimentacao.atualiza_entrada,
-            3: self.__controladorMovimentacao.atualiza_saida,
-            4: self.__controladorMovimentacao.exclui_entrada,
-            5: self.__controladorMovimentacao.exclui_saida,
+            2: self.__controladorMovimentacao.atualiza_acesso,
+            3: self.__controladorMovimentacao.exclui_acesso,
         }
         opcao = -1
         while int(opcao) != 0:
@@ -146,27 +144,32 @@ class ControladorSistema:
                 "input": "Selecione a opção: ",
                 "mensagem": "Lista de opções:"
                             "\n0 -> retornar\n1 -> acessar"
-                            "\n2 -> atualizar entrada\n3 -> atualizar saída"
-                            "\n4 -> excluir entrada\n5 -> excluir saída"
+                            "\n2 -> atualizar acesso\n3 -> excluir acesso"
             })
             self.__telaSistema.limpar_tela()
             try:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
             except (KeyError, ValueError, OpcaoInvalidaException):
-                raise OpcaoInvalidaException
+                print("Opção inválida!")
             except CodigoSenhaInvalidoException:
-                raise CodigoSenhaInvalidoException
+                print("Código e/ou senha inválido(s)!")
             except MatriculaInvalidaException:
-                raise MatriculaInvalidaException
+                print("Matrícula inválida!")
+            except CodigoInvalidoException:
+                print("Código inválido!")
             except BicicletarioLotadoException:
-                raise BicicletarioLotadoException
+                print("Bicicletário lotado!")
 
     def inicia(self):
+        print("Iniciando...")
+        print("Criando usuários e seguranças padrão...")
         self.__controladorCadastro\
             .inclui_usuario({"nome": "Fulano", "telefone": 12312300, "matricula": "123"})
         self.__controladorCadastro\
             .inclui_seguranca({"nome": "Zé", "telefone": 32132100, "codigo": 1, "senha_especial": "senha"})
+        print("Usuários e Seguranças criados!")
+        print("Criando registros padrão...")
         self.__sistema.movimentacao.registros.append(
             Registro(
                 timestamp=datetime(2019, 9, 5, 11, 30, 5, 0),
@@ -185,7 +188,8 @@ class ControladorSistema:
                 tipo=TipoRegistro.ESPECIAL,
                 codigo=1
             ))
-        TelaSistema.tela_inicia()
+        print("registros criados!")
+        print("Iniciou!")
         switcher = {
             0: self.finalizar,
             1: self.menu_cadastro,
@@ -207,4 +211,4 @@ class ControladorSistema:
                 funcao_escolhida = switcher[int(opcao)]
                 funcao_escolhida()
             except (KeyError, ValueError, OpcaoInvalidaException):
-                raise OpcaoInvalidaException
+                print("Opção inválida!")
