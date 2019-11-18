@@ -8,6 +8,9 @@ class TelaCadastro(AbstractTela):
     def __init__(self):
         super().__init__()
 
+    def components(selfs):
+        pass
+
     def lista_pessoas(self, pessoas: []):
         print("Listando...")
         print("Nome\t-\tTelefone\t-\tId")

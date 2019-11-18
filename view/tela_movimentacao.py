@@ -8,6 +8,9 @@ class TelaMovimentacao(AbstractTela):
     def __init__(self):
         super().__init__()
 
+    def components(selfs):
+        pass
+
     def lista_registros(self, registros, tipo_registro: TipoRegistro):
         print("Lista " + tipo_registro.name + ": ")
         for registro in registros:
