@@ -185,7 +185,7 @@ class ControladorSistema:
                 tipo=TipoRegistro.ESPECIAL,
                 codigo=1
             ))
-        TelaSistema.tela_inicia()
+
         switcher = {
             0: self.finalizar,
             1: self.menu_cadastro,
