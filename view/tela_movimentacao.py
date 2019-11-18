@@ -35,8 +35,8 @@ class TelaMovimentacao(AbstractTela):
         else:
             print("Retire sua bicicleta")
 
-    def libera_acesso(self):
-        print("Acesso Liberado, ")
+    def libera_acesso(self, nome):
+        print ("Acesso Liberado, " + nome)
 
     def modifica_registro(self, n=False):
         acao = "alterado"

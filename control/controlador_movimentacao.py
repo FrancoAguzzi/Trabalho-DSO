@@ -57,7 +57,7 @@ class ControladorMovimentacao:
                                     self.__telaMovimentacao.movimenta_bicicleta()
                                 else:
                                     raise BicicletarioLotadoException
-                            self.__telaMovimentacao.libera_acesso() + usuario.nome
+                            self.__telaMovimentacao.libera_acesso(usuario.nome)
                             return
                     if self.__movimentacao.vagas > 0:
                         self.__movimentacao.vagas -= 1
@@ -67,7 +67,7 @@ class ControladorMovimentacao:
                                      matricula=respostas["matricula"]
                                      ))
                         self.__telaMovimentacao.movimenta_bicicleta()
-                        self.__telaMovimentacao.libera_acesso() + usuario.nome
+                        self.__telaMovimentacao.libera_acesso(usuario.nome)
                         return
                     else:
                         raise BicicletarioLotadoException
@@ -82,7 +82,7 @@ class ControladorMovimentacao:
                                  tipo=TipoRegistro.ESPECIAL,
                                  codigo=respostas["codigo"]
                                  ))
-                    self.__telaMovimentacao.libera_acesso() + seguranca.nome
+                    self.__telaMovimentacao.libera_acesso(seguranca.nome)
                 else:
                     raise CodigoSenhaInvalidoException
         else:
