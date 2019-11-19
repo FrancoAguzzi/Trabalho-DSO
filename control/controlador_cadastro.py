@@ -4,13 +4,14 @@ from view.tela_cadastro import TelaCadastro
 from model.cadastro import Cadastro
 from model.tipo import TipoPessoa
 from exception.exception_cadastro import *
-
+from persistencia.usuarioDAO import UsuarioDAO
 
 class ControladorCadastro:
 
     def __init__(self):
         self.__cadastro = Cadastro()
         self.__telaCadastro = TelaCadastro()
+        self.__usuario_dao = UsuarioDAO()
 
     @property
     def cadastro(self):
@@ -23,7 +24,7 @@ class ControladorCadastro:
         for user in self.__cadastro.usuarios:
             if usuario.matricula == user.matricula:
                 raise UsuarioDuplicadoException
-        self.__cadastro.usuarios.append(usuario)
+        self.__usuario_dao.add(usuario)
         return usuario
 
     def exclui_usuario(self):
@@ -49,7 +50,7 @@ class ControladorCadastro:
             raise MatriculaInvalidaException
 
     def lista_usuarios(self):
-        self.__telaCadastro.lista_pessoas(self.__cadastro.usuarios)
+        self.__telaCadastro.lista_pessoas(self.__usuario_dao.get_all())
 
     def inclui_seguranca(self, respostas=None):
         if respostas is None:

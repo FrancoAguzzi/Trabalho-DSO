@@ -12,6 +12,7 @@ class TelaCadastro(AbstractTela):
         pass
 
     def lista_pessoas(self, pessoas: []):
+        print(pessoas)
         print("Listando...")
         print("Nome\t-\tTelefone\t-\tId")
         for pessoa in pessoas:

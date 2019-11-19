@@ -1,5 +1,5 @@
 import pickle
-from ABC import abc, abstractmethod
+from abc import ABC, abstractmethod
 
 class AbstractDAO(ABC):
 
@@ -9,7 +9,7 @@ class AbstractDAO(ABC):
         try:
             self.load()
         except FileNotFoundError:
-            self.__dump()
+            self.dump()
 
     @property
     def objectCache(self):
@@ -19,11 +19,11 @@ class AbstractDAO(ABC):
         pickle.dump(self.objectCache, open(self.datasource, 'wb'))
 
     def load(self):
-        self.objectCache = pickle.load(open(self.datasource, 'rb'))
+        self.__objectCache = pickle.load(open(self.datasource, 'rb'))
 
     def add(self, key, obj):
         self.objectCache[key] = obj
-        self.__dump()
+        self.dump()
 
     def get(self, key):
         try:
@@ -34,7 +34,7 @@ class AbstractDAO(ABC):
     def remove(self, key):
         try:
             self.objectCache.pop(key)
-            self.__dump()
+            self.dump()
         except KeyError:
             pass
 
