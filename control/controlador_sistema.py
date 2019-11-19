@@ -160,29 +160,6 @@ class ControladorSistema:
                 raise BicicletarioLotadoException
 
     def inicia(self):
-        self.__controladorCadastro\
-            .inclui_usuario({"nome": "Fulano", "telefone": 12312300, "matricula": "123"})
-        self.__controladorCadastro\
-            .inclui_seguranca({"nome": "Zé", "telefone": 32132100, "codigo": 1, "senha_especial": "senha"})
-        self.__sistema.movimentacao.registros.append(
-            Registro(
-                timestamp=datetime(2019, 9, 5, 11, 30, 5, 0),
-                tipo=TipoRegistro.ENTRADA,
-                matricula="123"
-            ))
-        self.__sistema.movimentacao.registros.append(
-            Registro(
-                timestamp=datetime(2019, 9, 6, 12, 50, 15, 0),
-                tipo=TipoRegistro.SAIDA,
-                matricula="123"
-            ))
-        self.__sistema.movimentacao.registros.append(
-            Registro(
-                timestamp=datetime(2019, 9, 5, 8, 10, 0, 0),
-                tipo=TipoRegistro.ESPECIAL,
-                codigo=1
-            ))
-
         switcher = {
             0: self.finalizar,
             1: self.menu_cadastro,

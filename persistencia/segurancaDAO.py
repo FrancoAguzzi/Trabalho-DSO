@@ -1,5 +1,5 @@
 import pickle
-from abstract_dao import AbstractDAO
+from persistencia.abstract_dao import AbstractDAO
 from model.seguranca import Seguranca
 
 class SegurancaDAO(AbstractDAO):
@@ -8,14 +8,12 @@ class SegurancaDAO(AbstractDAO):
         super().__init__('segurancas.pkl')
 
     def add(self, seguranca: Seguranca):
-        if (isinstance(usuario.matricula, int)) and (usuario is not None) \
-            and (isinstance(usuario, Usuario)):
-            super().add(usuario.matricula, usuario)
+        super().add(seguranca.codigo, seguranca)
 
-    def get(self, matricula):
-        if (isinstance(matricula, int)):
-            return super().get(matricula)
+    def get(self, codigo):
+        if (isinstance(codigo, int)):
+            return super().get(codigo)
 
-    def remove(self, matricula):
-        if (isinstance(matricula, int)):
-            return super().remove(matricula)
+    def remove(self, codigo):
+        if (isinstance(codigo, int)):
+            return super().remove(codigo)

@@ -5,6 +5,7 @@ from model.cadastro import Cadastro
 from model.tipo import TipoPessoa
 from exception.exception_cadastro import *
 from persistencia.usuarioDAO import UsuarioDAO
+from persistencia.segurancaDAO import SegurancaDAO
 
 class ControladorCadastro:
 
@@ -12,6 +13,7 @@ class ControladorCadastro:
         self.__cadastro = Cadastro()
         self.__telaCadastro = TelaCadastro()
         self.__usuario_dao = UsuarioDAO()
+        self.__seguranca_dao = SegurancaDAO()
 
     @property
     def cadastro(self):
@@ -29,10 +31,10 @@ class ControladorCadastro:
 
     def exclui_usuario(self):
         respostas = self.__telaCadastro.excluir()
-        for usuario in self.__cadastro.usuarios:
+        for usuario in self.__usuario_dao.get_all():
             if usuario.matricula == respostas["id"]:
                 # Faltou validação se o usuário não está em um registro
-                self.__cadastro.usuarios.remove(usuario)
+                self.__usuario_dao.remove(usuario)
                 return usuario
         raise MatriculaInvalidaException
 
@@ -60,7 +62,7 @@ class ControladorCadastro:
         for seg in self.__cadastro.segurancas:
             if seguranca.codigo == seg.codigo:
                 raise SegurancaDuplicadoException
-        self.__cadastro.segurancas.append(seguranca)
+        self.__seguranca_dao.add(seguranca)
         return seguranca
 
     def exclui_seguranca(self):
@@ -68,7 +70,7 @@ class ControladorCadastro:
         for seguranca in self.__cadastro.segurancas:
             if seguranca.codigo == int(respostas["id"]):
                 # Faltou validação se o segurança não está em um registro
-                self.__cadastro.segurancas.remove(seguranca)
+                self.__seguranca_dao.remove(seguranca)
                 return
         raise CodigoInvalidoException
 
@@ -88,4 +90,4 @@ class ControladorCadastro:
             raise CodigoInvalidoException
 
     def lista_segurancas(self):
-        self.__telaCadastro.lista_pessoas(self.__cadastro.segurancas)
+        self.__telaCadastro.lista_pessoas(self.__seguranca_dao.get_all())
