@@ -15,6 +15,7 @@ class ControladorCadastro:
         self.__usuario_dao = UsuarioDAO()
         self.__seguranca_dao = SegurancaDAO()
 
+    ### CONTROLADOR CADASTRO NÃO FAZ MAIS USO DE CADASTRO()
     @property
     def cadastro(self):
         return self.__cadastro
@@ -23,13 +24,13 @@ class ControladorCadastro:
         if respostas is None:
             respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.USUARIO)
         usuario = Usuario(respostas["nome"], respostas["telefone"], respostas["matricula"])
-        for user in self.__cadastro.usuarios:
+        for user in self.__usuario_dao.get_all():
             if usuario.matricula == user.matricula:
                 raise UsuarioDuplicadoException
         self.__usuario_dao.add(usuario)
         return usuario
 
-    def exclui_usuario(self):
+    def exclui_usuario(self): #NOT WORKING
         respostas = self.__telaCadastro.excluir()
         for usuario in self.__usuario_dao.get_all():
             if usuario.matricula == respostas["id"]:
@@ -41,7 +42,7 @@ class ControladorCadastro:
     def atualiza_usuario(self):
         atualizado = False
         respostas = self.__telaCadastro.cadastro(novo=False, tipo=TipoPessoa.USUARIO)
-        for usuario in self.__cadastro.usuarios:
+        for usuario in self.__usuario_dao.get_all():
             if usuario.matricula == respostas["matricula"]:
                 atualizado = True
                 if respostas["nome"]:
@@ -59,25 +60,24 @@ class ControladorCadastro:
             respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.SEGURANCA)
         seguranca = Seguranca(respostas["nome"], respostas["telefone"],
                               respostas["senha_especial"], respostas["codigo"])
-        for seg in self.__cadastro.segurancas:
-            if seguranca.codigo == seg.codigo:
-                raise SegurancaDuplicadoException
+        if self.__seguranca_dao.get(respostas["codigo"]):
+            raise SegurancaDuplicadoException
         self.__seguranca_dao.add(seguranca)
         return seguranca
 
-    def exclui_seguranca(self):
+    def exclui_seguranca(self): #NOT WORKING
         respostas = self.__telaCadastro.excluir()
-        for seguranca in self.__cadastro.segurancas:
-            if seguranca.codigo == int(respostas["id"]):
-                # Faltou validação se o segurança não está em um registro
-                self.__seguranca_dao.remove(seguranca)
-                return
+        if self.__seguranca_dao.get(int(respostas["id"])):
+            print(self.__seguranca_dao.get((respostas["id"])))
+            # Faltou validação se o segurança não está em um registro
+            self.__seguranca_dao.remove(seguranca)
+            return
         raise CodigoInvalidoException
 
     def atualiza_seguranca(self):
         atualizado = False
         respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.SEGURANCA, novo=False)
-        for seguranca in self.__cadastro.segurancas:
+        for seguranca in self.__seguranca_dao.get_all():
             if seguranca.codigo == respostas["codigo"]:
                 atualizado = True
                 if respostas["nome"]:
