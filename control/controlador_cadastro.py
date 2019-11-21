@@ -10,10 +10,11 @@ from persistencia.segurancaDAO import SegurancaDAO
 class ControladorCadastro:
 
     def __init__(self):
-        self.__cadastro = Cadastro()
         self.__telaCadastro = TelaCadastro()
+        self.__cadastro = Cadastro()
         self.__usuario_dao = UsuarioDAO()
         self.__seguranca_dao = SegurancaDAO()
+
 
     ### CONTROLADOR CADASTRO NÃO FAZ MAIS USO DE CADASTRO()
     @property
@@ -91,3 +92,15 @@ class ControladorCadastro:
 
     def lista_segurancas(self):
         self.__telaCadastro.lista_pessoas(self.__seguranca_dao.get_all())
+
+    def menu(self, tipo):
+        if tipo == TipoPessoa.USUARIO:
+            pessoas = self.__usuario_dao.get_all()
+        else:
+            pessoas = self.__seguranca_dao.get_all()
+
+        self.__telaCadastro.components(tipo=tipo, pessoas=pessoas)
+        self.__telaCadastro.unhide()
+        button, values = self.__telaCadastro.open()
+        self.__telaCadastro.hide()
+        return button, values
