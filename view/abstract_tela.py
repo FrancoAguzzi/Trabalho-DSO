@@ -28,7 +28,6 @@ class AbstractTela(ABC):
     def close(self):
         self.__window.Close()
 
-    @abstractmethod
     def mostra_informacao(self, info):
         pass
 

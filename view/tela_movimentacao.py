@@ -1,6 +1,7 @@
 from view.abstract_tela import AbstractTela
 from model.tipo import TipoRegistro
 from getpass import getpass
+import PySimpleGUI as sg
 
 
 class TelaMovimentacao(AbstractTela):
@@ -46,3 +47,11 @@ class TelaMovimentacao(AbstractTela):
         if n:
             acao = "removido"
         return "Registro " + acao + " com sucesso!"
+
+    def components(self):
+
+        layout = [[sg.Button(('Acesso'), size=(30, 4), justification='center')],
+                  [sg.Button(('Exclui'), size=(10, 1)), sg.Button(('Atualiza'), size=(10 ,1), sg.Button(('Voltar'), size=(10, 1))]]
+
+        self.window = sg.Window('Menu Movimentação').Layout(layout)
+        self.open()
