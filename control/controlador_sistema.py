@@ -9,7 +9,7 @@ from datetime import *
 from exception.exception_cadastro import *
 from exception.exception_movimentacao import *
 from exception.exception_sistema import *
-
+from view.popups import  Popups
 
 class ControladorSistema:
 
