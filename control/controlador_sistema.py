@@ -1,6 +1,7 @@
 from control.controlador_cadastro import ControladorCadastro
 from control.controlador_movimentacao import ControladorMovimentacao
 from view.tela_sistema import TelaSistema
+from view.select_tipo import SelectTipo
 from model.tipo import TipoPessoa, TipoRegistro
 from model.registro import Registro
 from model.sistema import Sistema
@@ -16,6 +17,7 @@ class ControladorSistema:
         self.__controladorCadastro = ControladorCadastro()
         self.__controladorMovimentacao = ControladorMovimentacao(self.__controladorCadastro)
         self.__telaSistema = TelaSistema()
+        self.__selectTipo = SelectTipo()
         self.__sistema = Sistema(
             cadastro=self.__controladorCadastro.cadastro,
             movimentacao=self.__controladorMovimentacao.movimentacao
@@ -44,7 +46,13 @@ class ControladorSistema:
         exit(0)
 
     def retornar(self):
-        self.__telaSistema.retorna()
+        self.inicia()
+
+    def select_tipo(self):
+        self.__selectTipo.unhide()
+        button, values = self.__selectTipo.open()
+        self.__selectTipo.hide()
+        return button
 
     def menu_relatorio(self):
         opcao = self.__telaSistema.mostra_informacao({
@@ -94,91 +102,68 @@ class ControladorSistema:
             raise OpcaoInvalidaException + '\n' + self.__telaSistema.retorna()
 
     def menu_cadastro(self):
+        tipo = self.select_tipo()
+        if tipo == 'Usuário':
+            tipo_pessoa = TipoPessoa.USUARIO
+        else:
+            tipo_pessoa = TipoPessoa.SEGURANCA
+        button, values = self.__controladorCadastro.menu(tipo_pessoa)
         switcher = {
-            0: self.retornar,
+            'Início': self.retornar,
             1: self.__controladorCadastro.inclui_usuario,
-            2: self.__controladorCadastro.lista_usuarios,
             3: self.__controladorCadastro.atualiza_usuario,
             4: self.__controladorCadastro.exclui_usuario,
             5: self.__controladorCadastro.inclui_seguranca,
-            6: self.__controladorCadastro.lista_segurancas,
             7: self.__controladorCadastro.atualiza_seguranca,
             8: self.__controladorCadastro.exclui_seguranca
         }
-        opcao = -1
-        while int(opcao) != 0:
-            opcao = self.__telaSistema.mostra_informacao({
-                "input": "Selecione a opção: ",
-                "mensagem": "Lista de opções:"
-                            "\n0 -> retornar"
-                            "\n1 -> incluir usuário\n2 -> listar usuários"
-                            "\n3 -> atualizar usuário\n4 -> excluir usuário"
-                            "\n5 -> incluir segurança\n6 -> listar seguranças"
-                            "\n7 -> atualizar segurança\n8 -> excluir segurança"
-            })
-            self.__telaSistema.limpar_tela()
-            try:
-                funcao_escolhida = switcher[int(opcao)]
-                funcao_escolhida()
-            except (KeyError, ValueError, OpcaoInvalidaException):
-                raise OpcaoInvalidaException
-            except MatriculaInvalidaException:
-                raise MatriculaInvalidaException
-            except UsuarioDuplicadoException:
-                raise UsuarioDuplicadoException
-            except CodigoInvalidoException:
-                raise CodigoInvalidoException
-            except SegurancaDuplicadoException:
-                raise SegurancaDuplicadoException
+        try:
+            funcao_escolhida = switcher[button]
+            funcao_escolhida()
+        except (KeyError, ValueError, OpcaoInvalidaException):
+            raise OpcaoInvalidaException
+        except MatriculaInvalidaException:
+            raise MatriculaInvalidaException
+        except UsuarioDuplicadoException:
+            raise UsuarioDuplicadoException
+        except CodigoInvalidoException:
+            raise CodigoInvalidoException
+        except SegurancaDuplicadoException:
+            raise SegurancaDuplicadoException
 
     def menu_movimentacao(self):
+        button, values = self.__controladorMovimentacao.menu()
         switcher = {
-            0: self.retornar,
-            1: self.__controladorMovimentacao.acesso,
-            2: self.__controladorMovimentacao.atualiza_acesso,
-            3: self.__controladorMovimentacao.exclui_acesso,
+            'Início': self.retornar,
+            'Acesso': self.__controladorMovimentacao.acesso,
+            'Atualiza': self.__controladorMovimentacao.atualiza_acesso,
+            'Exclui': self.__controladorMovimentacao.exclui_acesso,
         }
-        opcao = -1
-        while int(opcao) != 0:
-            opcao = self.__telaSistema.mostra_informacao({
-                "input": "Selecione a opção: ",
-                "mensagem": "Lista de opções:"
-                            "\n0 -> retornar\n1 -> acessar"
-                            "\n2 -> atualizar acesso\n3 -> exclui acesso"
-            })
-            self.__telaSistema.limpar_tela()
-            try:
-                funcao_escolhida = switcher[int(opcao)]
-                funcao_escolhida()
-            except (KeyError, ValueError, OpcaoInvalidaException):
-                raise OpcaoInvalidaException
-            except CodigoSenhaInvalidoException:
-                raise CodigoSenhaInvalidoException
-            except MatriculaInvalidaException:
-                raise MatriculaInvalidaException
-            except BicicletarioLotadoException:
-                raise BicicletarioLotadoException
+        try:
+            funcao_escolhida = switcher[button]
+            funcao_escolhida()
+        except (KeyError, ValueError, OpcaoInvalidaException):
+            raise OpcaoInvalidaException
+        except CodigoSenhaInvalidoException:
+            raise CodigoSenhaInvalidoException
+        except MatriculaInvalidaException:
+            raise MatriculaInvalidaException
+        except BicicletarioLotadoException:
+            raise BicicletarioLotadoException
 
     def inicia(self):
+        self.__telaSistema.unhide()
+        button, values = self.__telaSistema.open()
+        self.__telaSistema.hide()
+        print(button)
         switcher = {
-            0: self.finalizar,
-            1: self.menu_cadastro,
-            2: self.menu_movimentacao,
-            3: self.menu_relatorio
+            'Sair': self.finalizar,
+            'Cadastro': self.menu_cadastro,
+            'Movimentação': self.menu_movimentacao,
+            'Relatório': self.menu_relatorio
         }
-
-        while True:
-            opcao = self.__telaSistema.mostra_informacao({
-                "input": "Selecione a opção: ",
-                "mensagem": "Lista de opções:"
-                            "\n0 -> sair"
-                            "\n1 -> menu cadastro"
-                            "\n2 -> menu movimentação"
-                            "\n3 -> menu relatório"
-            })
-            self.__telaSistema.limpar_tela()
-            try:
-                funcao_escolhida = switcher[int(opcao)]
-                funcao_escolhida()
-            except (KeyError, ValueError, OpcaoInvalidaException):
+        try:
+            funcao_escolhida = switcher[button]
+            funcao_escolhida()
+        except (KeyError, ValueError, OpcaoInvalidaException):
                 raise OpcaoInvalidaException
