@@ -2,12 +2,12 @@ from abc import ABC, abstractmethod
 import os
 import PySimpleGUI as sg
 
+
 class AbstractTela(ABC):
 
     def __init__(self):
         self.__window = None
         self.components()
-        print("Abstract Tela")
 
     @property
     def window(self):
@@ -18,8 +18,14 @@ class AbstractTela(ABC):
         self.__window = window
 
     @abstractmethod
-    def components(selfs):
+    def components(self):
         pass
+
+    def hide(self):
+        self.__window.Hide()
+
+    def unhide(self):
+        self.__window.UnHide()
 
     def open(self):
         button, values = self.__window.Read()
