@@ -14,8 +14,6 @@ class TelaSistema(AbstractTela):
                   [sg.Button('Movimentação', size=(15, 2)), sg.Button('Sair', size=(15, 2))]]
 
         selfs.window = sg.Window('Menu Inicial').Layout(layout)
-        selfs.open()
-
 
     def lista_relatorio(self, registros, cadastros):
         print("Timestamp\t\t-\tIdent.\t-\tNome\t-\tTipo Pessoa\t-\tTipo")

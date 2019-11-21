@@ -1,9 +1,10 @@
-from abstract_tela import AbstractTela
+from view.abstract_tela import AbstractTela
+import PySimpleGUI as sg
 
 class TelaAcesso(AbstractTela):
 
     def __init__(self):
-        super().__init__
+        super().__init__()
 
     def components(selfs):
 
@@ -26,8 +27,8 @@ class TelaAcesso(AbstractTela):
                 keys_entered = ''
             elif button in '1234567890':
                 keys_entered = values['input']
-            keys_entered += button
+                keys_entered += button
             elif button == 'Submit':
-            keys_entered = values['input']
+                keys_entered = values['input']
             window.FindElement('out').Update(keys_entered)
         window.FindElement('input').Update(keys_entered)
