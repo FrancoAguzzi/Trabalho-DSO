@@ -21,6 +21,12 @@ class ControladorCadastro:
     def cadastro(self):
         return self.__cadastro
 
+    def get_usuarios(self):
+        return self.__usuario_dao.get_all()
+
+    def get_segurancas(self):
+        return self.__seguranca_dao.get_all()
+
     def inclui_usuario(self, respostas=None):
         if respostas is None:
             respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.USUARIO)
