@@ -48,12 +48,6 @@ class ControladorSistema:
     def retornar(self):
         self.inicia()
 
-    def select_tipo(self):
-        self.__selectTipo.unhide()
-        button, values = self.__selectTipo.open()
-        self.__selectTipo.hide()
-        return button
-
     def menu_relatorio(self):
         opcao = self.__telaSistema.mostra_informacao({
             "input": "Selecione a opção: ",
@@ -102,24 +96,25 @@ class ControladorSistema:
             raise OpcaoInvalidaException + '\n' + self.__telaSistema.retorna()
 
     def menu_cadastro(self):
-        tipo = self.select_tipo()
-        if tipo == 'Usuário':
-            tipo_pessoa = TipoPessoa.USUARIO
-        else:
-            tipo_pessoa = TipoPessoa.SEGURANCA
+        tipo_pessoa = self.__selectTipo.open()
+
         button, values = self.__controladorCadastro.menu(tipo_pessoa)
-        switcher = {
+
+        switcher = {TipoPessoa.USUARIO: {
             'Início': self.retornar,
-            1: self.__controladorCadastro.inclui_usuario,
-            3: self.__controladorCadastro.atualiza_usuario,
-            4: self.__controladorCadastro.exclui_usuario,
-            5: self.__controladorCadastro.inclui_seguranca,
-            7: self.__controladorCadastro.atualiza_seguranca,
-            8: self.__controladorCadastro.exclui_seguranca
-        }
+            'Novo': self.__controladorCadastro.inclui_usuario,
+            'Editar': self.__controladorCadastro.atualiza_usuario,
+            'Excluir': self.__controladorCadastro.exclui_usuario,
+        }, TipoPessoa.SEGURANCA: {
+            'Início': self.retornar,
+            'Novo': self.__controladorCadastro.inclui_seguranca,
+            'Editar': self.__controladorCadastro.atualiza_seguranca,
+            'Excluir': self.__controladorCadastro.exclui_seguranca
+        }}
         try:
-            funcao_escolhida = switcher[button]
+            funcao_escolhida = switcher[tipo_pessoa][button]
             funcao_escolhida()
+            self.menu_cadastro()
         except (KeyError, ValueError, OpcaoInvalidaException):
             raise OpcaoInvalidaException
         except MatriculaInvalidaException:
@@ -135,13 +130,14 @@ class ControladorSistema:
         button, values = self.__controladorMovimentacao.menu()
         switcher = {
             'Início': self.retornar,
-            'Acesso': self.__controladorMovimentacao.acesso,
+            'Acessar': self.__controladorMovimentacao.acesso,
             'Atualiza': self.__controladorMovimentacao.atualiza_acesso,
             'Exclui': self.__controladorMovimentacao.exclui_acesso,
         }
         try:
             funcao_escolhida = switcher[button]
             funcao_escolhida()
+            self.menu_movimentacao()
         except (KeyError, ValueError, OpcaoInvalidaException):
             raise OpcaoInvalidaException
         except CodigoSenhaInvalidoException:
