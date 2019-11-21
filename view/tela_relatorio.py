@@ -8,7 +8,7 @@ class TelaRelatorio(AbstractTela):
 
     def components(selfs):
 
-        layout = [[sg.InputCombo(('Sem filtro', 'Matrícula', 'Código', 'Tipo Pessoa', 'Tipo Registro', 'Data')), sg.Button(('Ir'), size=(10,2))],
-                  [sg.Button(('Voltar'), size=(10,1))]]
+        layout = [[sg.InputCombo(('Sem filtro', 'Identificador', 'Tipo Pessoa', 'Tipo Registro', 'Data'), key="option")],
+                  [sg.Button('Ir', size=(10, 1)), sg.Button('Início', size=(10, 1))]]
 
         selfs.window = sg.Window('Menu Relatório').Layout(layout)

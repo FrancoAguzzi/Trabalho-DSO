@@ -4,7 +4,7 @@ from view.abstract_tela import AbstractTela
 class TelaFiltro(AbstractTela):
 
     def __init__(self):
-        super().__init__
+        super().__init__()
 
     def components(self):
 
