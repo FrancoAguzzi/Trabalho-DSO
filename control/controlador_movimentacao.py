@@ -151,3 +151,9 @@ class ControladorMovimentacao:
             raise CodigoInvalidoException
         else:
             raise MatriculaInvalidaException
+
+    def menu(self):
+        self.__telaMovimentacao.unhide()
+        button, values = self.__telaMovimentacao.open()
+        self.__telaMovimentacao.hide()
+        return button, values
