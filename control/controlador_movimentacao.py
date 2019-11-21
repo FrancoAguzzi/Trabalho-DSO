@@ -6,14 +6,21 @@ from model.tipo import TipoRegistro
 from exception.exception_movimentacao import *
 from exception.exception_cadastro import *
 from exception.exception_sistema import *
-
+from view.tela_acesso import TelaAcesso
+from view.select_tipo import SelectTipo
+from model.tipo import TipoPessoa
+from control.controlador_cadastro import ControladorCadastro
+from view.popups import Popups
 
 class ControladorMovimentacao:
 
-    def __init__(self, controlador_cadastro):
+    def __init__(self, controlador_cadastro: ControladorCadastro):
         self.__movimentacao = Movimentacao(vagas=10)
         self.__controladorCadastro = controlador_cadastro
         self.__telaMovimentacao = TelaMovimentacao()
+        self.__telaAcesso = TelaAcesso()
+        self.__selectTipo = SelectTipo()
+        self.__popups = Popups()
 
     @property
     def movimentacao(self):
@@ -23,66 +30,82 @@ class ControladorMovimentacao:
     def registros(self):
         return self.__movimentacao.registros
 
-    def acesso(self):
-        opcao = self.__telaMovimentacao.mostra_informacao({
-            "input": "Selecione a opção: ",
-            "mensagem": "Acesso de:"
-                        "\n1 -> Usuário"
-                        "\n2 -> Segurança"
-        })
+    def controle_console(self, senha=False):
+        self.__telaAcesso.components(senha)
+        self.__telaAcesso.unhide()
+        keys_entered = ''
+        while True:
+            button, values = self.__telaAcesso.open()
+            if button == 'Ir':
+                identificador = values['input']
+                break
+            if button == 'Limpar':
+                print('Limpar')
+                keys_entered = ''
+            elif button in ('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'):
+                print('Button In')
+                keys_entered = values['input']
+                keys_entered += button
+            self.__telaAcesso.window.FindElement('input').Update(keys_entered)
+        self.__telaAcesso.hide()
+        return identificador
 
-        if opcao == "1":
-            usuarios = self.__controladorCadastro.cadastro.usuarios
-            respostas = self.__telaMovimentacao.acesso_pessoa()
+    def acesso(self):
+        tipo_pessoa = self.__selectTipo.open()
+
+        identificador = self.controle_console()
+
+        if tipo_pessoa == TipoPessoa.USUARIO:
+            usuarios = self.__controladorCadastro.get_usuarios()
             for usuario in usuarios:
-                if usuario.matricula == respostas["matricula"]:
+                if usuario.matricula == identificador:
                     for registro in reversed(self.__movimentacao.registros):
-                        if registro.matricula == respostas["matricula"]:
+                        if registro.matricula == identificador:
                             if registro.tipo == TipoRegistro.ENTRADA:
                                 self.__movimentacao.vagas += 1
                                 self.__movimentacao.registros.append(
                                     Registro(timestamp=datetime.now(),
                                              tipo=TipoRegistro.SAIDA,
-                                             matricula=respostas["matricula"]
+                                             matricula=identificador
                                              ))
-                                self.__telaMovimentacao.movimenta_bicicleta(False)
+                                self.__popups.default(title="Sucesso", message="Retire sua bicicleta")
                             else:
                                 if self.__movimentacao.vagas > 0:
                                     self.__movimentacao.vagas -= 1
                                     self.__movimentacao.registros.append(
                                         Registro(timestamp=datetime.now(),
                                                  tipo=TipoRegistro.ENTRADA,
-                                                 matricula=respostas["matricula"]
+                                                 matricula=identificador
                                                  ))
-                                    self.__telaMovimentacao.movimenta_bicicleta()
+                                    self.__popups.default(title="Sucesso", message="Coloque sua bicicleta em um local disponível")
                                 else:
                                     raise BicicletarioLotadoException
-                            self.__telaMovimentacao.libera_acesso(usuario.nome)
+                            self.__popups.default(title="Acesso Liberado", message=usuario.nome)
                             return
                     if self.__movimentacao.vagas > 0:
                         self.__movimentacao.vagas -= 1
                         self.__movimentacao.registros.append(
                             Registro(timestamp=datetime.now(),
                                      tipo=TipoRegistro.ENTRADA,
-                                     matricula=respostas["matricula"]
+                                     matricula=identificador
                                      ))
-                        self.__telaMovimentacao.movimenta_bicicleta()
-                        self.__telaMovimentacao.libera_acesso(usuario.nome)
+                        self.__popups.default(title="Sucesso", message="Coloque sua bicicleta em um local disponível")
+                        self.__popups.default(title="Acesso Liberado", message=usuario.nome)
                         return
                     else:
                         raise BicicletarioLotadoException
             raise MatriculaInvalidaException
-        elif opcao == "2":
-            segurancas = self.__controladorCadastro.cadastro.segurancas
-            respostas = self.__telaMovimentacao.acesso_pessoa(tipo="segurança")
+        elif tipo_pessoa == TipoPessoa.SEGURANCA:
+            segurancas = self.__controladorCadastro.get_segurancas()
+            senha = self.controle_console(senha=True)
             for seguranca in segurancas:
-                if seguranca.codigo == int(respostas["codigo"]) and seguranca.senha_especial == respostas["senha_especial"]:
+                if seguranca.codigo == int(identificador) and seguranca.senha_especial == senha:
                     self.__movimentacao.registros.append(
                         Registro(timestamp=datetime.now(),
                                  tipo=TipoRegistro.ESPECIAL,
-                                 codigo=respostas["codigo"]
+                                 codigo=identificador
                                  ))
-                    self.__telaMovimentacao.libera_acesso(seguranca.nome)
+                    self.__popups.default(title="Acesso Liberado", message=seguranca.nome)
                 else:
                     raise CodigoSenhaInvalidoException
         else:
