@@ -7,7 +7,7 @@ from exception.exception_movimentacao import *
 from exception.exception_cadastro import *
 from exception.exception_sistema import *
 from view.tela_acesso import TelaAcesso
-from view.select_tipo import SelectTipo
+from view.select_tipo import SelectTipoPessoa
 from model.tipo import TipoPessoa
 from control.controlador_cadastro import ControladorCadastro
 from view.popups import Popups
@@ -19,7 +19,7 @@ class ControladorMovimentacao:
         self.__controladorCadastro = controlador_cadastro
         self.__telaMovimentacao = TelaMovimentacao()
         self.__telaAcesso = TelaAcesso()
-        self.__selectTipo = SelectTipo()
+        self.__selectTipoPessoa = SelectTipoPessoa()
         self.__popups = Popups()
 
     @property
@@ -51,7 +51,7 @@ class ControladorMovimentacao:
         return identificador
 
     def acesso(self):
-        tipo_pessoa = self.__selectTipo.open()
+        tipo_pessoa = self.__selectTipoPessoa.open()
 
         identificador = self.controle_console()
 
