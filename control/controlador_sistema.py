@@ -1,7 +1,7 @@
 from control.controlador_cadastro import ControladorCadastro
 from control.controlador_movimentacao import ControladorMovimentacao
 from view.tela_sistema import TelaSistema
-from view.select_tipo import SelectTipo
+from view.select_tipo import SelectTipoPessoa, SelectTipoRegistro
 from model.tipo import TipoPessoa, TipoRegistro
 from model.registro import Registro
 from model.sistema import Sistema
@@ -10,6 +10,7 @@ from exception.exception_cadastro import *
 from exception.exception_movimentacao import *
 from exception.exception_sistema import *
 from view.popups import  Popups
+from view.tela_relatorio import TelaRelatorio
 
 class ControladorSistema:
 
@@ -17,7 +18,10 @@ class ControladorSistema:
         self.__controladorCadastro = ControladorCadastro()
         self.__controladorMovimentacao = ControladorMovimentacao(self.__controladorCadastro)
         self.__telaSistema = TelaSistema()
-        self.__selectTipo = SelectTipo()
+        self.__telaRelatorio = TelaRelatorio()
+        self.__selectTipoPessoa = SelectTipoPessoa()
+        self.__selectTipoRegistro = SelectTipoRegistro()
+        self.__popups = Popups()
         self.__sistema = Sistema(
             cadastro=self.__controladorCadastro.cadastro,
             movimentacao=self.__controladorMovimentacao.movimentacao
@@ -41,6 +45,7 @@ class ControladorSistema:
         if filtro is not None:
             registros = self.aplica_filtro(filtro, registros)
         self.__telaSistema.lista_relatorio(registros, self.__sistema.cadastro)
+        self.retornar()
 
     def finalizar(self):
         exit(0)
@@ -49,54 +54,34 @@ class ControladorSistema:
         self.inicia()
 
     def menu_relatorio(self):
-        opcao = self.__telaSistema.mostra_informacao({
-            "input": "Selecione a opção: ",
-            "mensagem": "Filtrar por:"
-                        "\n0 -> Sem filtro"
-                        "\n1 -> Identificador"
-                        "\n2 -> Tipo pessoa"
-                        "\n3 -> Tipo registro"
-                        "\n4 -> Data"
-        })
-        self.__telaSistema.limpar_tela()
-        if opcao == "0":
+        self.__telaRelatorio.unhide()
+        button, values = self.__telaRelatorio.open()
+        self.__telaRelatorio.hide()
+
+        if button == 'Início':
+            self.retornar()
+        elif values["option"] == "Sem filtro":
             self.relatorio()
-        elif opcao == "1":
-            valor = self.__telaSistema.mostra_informacao({
-                "input": "Filtro por identificador: ",
-                "mensagem": "Digite o identificador: "
-            })
-            self.relatorio({"chave": "identificador", "valor": valor})
-        elif opcao == "2":
-            valor = self.__telaSistema.mostra_informacao({
-                "input": "Filtro por Tipo de Pessoa: ",
-                "mensagem": "Filtrar por: "
-                            "\n1 -> Usuário"
-                            "\n2 -> Segurança"
-            })
-            self.relatorio({"chave": "tipo_pessoa", "valor": TipoPessoa(int(valor))})
-        elif opcao == "3":
-            valor = self.__telaSistema.mostra_informacao({
-                "input": "Filtro por Tipo de Registro: ",
-                "mensagem": "Filtrar por: "
-                            "\n1 -> Entrada"
-                            "\n2 -> Saída"
-                            "\n3 -> Especial"
-            })
-            self.relatorio({"chave": "tipo", "valor": TipoRegistro(int(valor))})
-        elif opcao == "4":
-            valor = self.__telaSistema.mostra_informacao({
-                "input": "Filtro por Data do Registro: ",
-                "mensagem": "Informe a data no formato d-m-y: "
-            })
+        elif values["option"] == "Identificador":
+            text = self.__popups.simple_input("Identificador", "Filtro")
+            if text is None:
+                self.retornar()
+            self.relatorio({"chave": "identificador", "valor": text})
+        elif values["option"] == "Tipo pessoa":
+            tipo_pessoa = self.__selectTipoPessoa.open()
+            self.relatorio({"chave": "tipo_pessoa", "valor": tipo_pessoa})
+        elif values["option"] == "Tipo registro":
+            tipo_registro = self.__selectTipoRegistro.open()
+            self.relatorio({"chave": "tipo", "valor": tipo_registro})
+        elif values["option"] == "Data":
+            valor = self.__popups.simple_input("Data (d-m-y)", "Filtro")
             timestamp = datetime.strptime(valor, "%d-%m-%Y")
-            print(timestamp)
             self.relatorio({"chave": "timestamp", "valor": timestamp})
         else:
-            raise OpcaoInvalidaException + '\n' + self.__telaSistema.retorna()
+            raise OpcaoInvalidaException
 
     def menu_cadastro(self):
-        tipo_pessoa = self.__selectTipo.open()
+        tipo_pessoa = self.__selectTipoPessoa.open()
 
         button, values = self.__controladorCadastro.menu(tipo_pessoa)
 
