@@ -9,8 +9,11 @@ class TelaMovimentacao(AbstractTela):
     def __init__(self):
         super().__init__()
 
-    def components(selfs):
-        pass
+    def components(self):
+        layout = [[sg.Button('Acessar', size=(30, 4), pad=(25,0))],
+                  [sg.Button('Excluir', size=(10, 1)), sg.Button('Atualizar', size=(10 ,1)), sg.Button('Início', size=(10, 1))]]
+
+        self.window = sg.Window('Menu Movimentação').Layout(layout)
 
     def lista_registros(self, registros, tipo_registro: TipoRegistro):
         print("Lista " + tipo_registro.name + ": ")
@@ -47,11 +50,3 @@ class TelaMovimentacao(AbstractTela):
         if n:
             acao = "removido"
         return "Registro " + acao + " com sucesso!"
-
-    def components(self):
-
-        layout = [[sg.Button(('Acesso'), size=(30, 4), justification='center')],
-                  [sg.Button(('Exclui'), size=(10, 1)), sg.Button(('Atualiza'), size=(10 ,1), sg.Button(('Voltar'), size=(10, 1))]]
-
-        self.window = sg.Window('Menu Movimentação').Layout(layout)
-        self.open()
