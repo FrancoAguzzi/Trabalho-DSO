@@ -16,3 +16,6 @@ class Popups():
 
     def error(self, title, message):
         return sg.PopupError(title, message)
+
+    def simple_input(self, title, message):
+        return sg.PopupGetText(title, message)
