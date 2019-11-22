@@ -25,7 +25,7 @@ class ControladorSistema:
         self.__selectTipoRegistro = SelectTipoRegistro()
         self.__popups = Popups()
         self.__sistema = Sistema(
-            cadastros=self.__controladorCadastro.cadastros(),
+            cadastros=self.__controladorCadastro.cadastros,
             movimentacao=self.__controladorMovimentacao.movimentacao
         )
 
@@ -86,8 +86,9 @@ class ControladorSistema:
             self.__popups.error("Erro", "Opção Inválida")
             self.retornar()
 
-    def menu_cadastro(self):
-        tipo_pessoa = self.__selectTipoPessoa.open()
+    def menu_cadastro(self, tipo_pessoa=None):
+        if tipo_pessoa is None:
+            tipo_pessoa = self.__selectTipoPessoa.open()
 
         button, values = self.__controladorCadastro.menu(tipo_pessoa)
 
@@ -105,7 +106,7 @@ class ControladorSistema:
         try:
             funcao_escolhida = switcher[tipo_pessoa][button]
             funcao_escolhida()
-            self.menu_cadastro()
+            self.menu_cadastro(tipo_pessoa)
         except (KeyError, ValueError, OpcaoInvalidaException):
             self.__popups.error("Erro", "Opção Inválida")
             self.retornar()
