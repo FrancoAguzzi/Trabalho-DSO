@@ -7,7 +7,7 @@ from exception.exception_movimentacao import *
 from exception.exception_cadastro import *
 from exception.exception_sistema import *
 from view.tela_acesso import TelaAcesso
-from view.select_tipo import SelectTipoPessoa
+from view.select_tipo import SelectTipoPessoa, SelectTipoRegistro
 from model.tipo import TipoPessoa
 from control.controlador_cadastro import ControladorCadastro
 from view.popups import Popups
@@ -22,6 +22,7 @@ class ControladorMovimentacao:
         self.__telaMovimentacao = TelaMovimentacao()
         self.__telaAcesso = TelaAcesso()
         self.__selectTipoPessoa = SelectTipoPessoa()
+        self.__selectTipoRegistro = SelectTipoRegistro()
         self.__popups = Popups()
         self.__registros_dao = RegistroDAO()
 
@@ -113,23 +114,19 @@ class ControladorMovimentacao:
             raise OpcaoInvalidaException
 
     def atualiza_acesso(self):
-        opcao = self.__telaMovimentacao.mostra_informacao({
-            "input": "Selecione a opção: ",
-            "mensagem": "Tipo de acesso:"
-                        "\n1 -> Entrada"
-                        "\n2 -> Saída"
-        })
-        if int(opcao) > 2 or int(opcao) < 1:
+        tipo_registro = self.__selectTipoRegistro.open()
+
+        if tipo_registro == tipo_registro.ESPECIAL:
             raise OpcaoInvalidaException
 
-        id_pessoa = self.__telaMovimentacao.mostra_informacao({
-            "input": "Digite a matricula: ",
-            "mensagem": "Alterar o acesso de:"
-        })
+        text = self.__popups.simple_input("Matrícula:", "Alterar acesso")
+
+        if text is None:
+            return
 
         for registro in list(self.registros):
-            if registro.tipo == TipoRegistro(int(opcao)):
-                if registro.matricula == id_pessoa:
+            if registro.tipo == tipo_registro:
+                if registro.matricula == text:
                     if registro.tipo == TipoRegistro.ENTRADA:
                         registro.tipo = TipoRegistro.SAIDA
                         self.__movimentacao.vagas += 1
@@ -139,29 +136,18 @@ class ControladorMovimentacao:
                             self.__movimentacao.vagas -= 1
                         else:
                             raise BicicletarioLotadoException
-                    self.__telaMovimentacao.modifica_registro()
+                    self.__popups.default("Sucesso", "Registro alterado")
+                    return
         raise MatriculaInvalidaException
 
-
     def exclui_acesso(self):
-        opcao = self.__telaMovimentacao.mostra_informacao({
-            "input": "Selecione a opção: ",
-            "mensagem": "Tipo de acesso:"
-                        "\n1 -> Entrada"
-                        "\n2 -> Saída"
-                        "\n3 -> Especial"
-        })
-        if int(opcao) > 3 or int(opcao) < 1:
-            raise OpcaoInvalidaException
+        tipo_registro = self.__selectTipoRegistro.open()
 
-        id_pessoa = self.__telaMovimentacao.mostra_informacao({
-            "input": "Digite o identificador: ",
-            "mensagem": "Remover o acesso de:"
-        })
+        text = self.__popups.simple_input("Identificador:", "Remover acesso")
 
         for registro in list(self.registros):
-            if registro.tipo == TipoRegistro(int(opcao)):
-                if registro.matricula == id_pessoa or registro.codigo == int(id_pessoa):
+            if registro.tipo == tipo_registro:
+                if registro.matricula == text or registro.codigo == int(text):
                     self.__registros_dao.remove(registro)
                     if registro.tipo == TipoRegistro.ENTRADA:
                         self.__movimentacao.vagas += 1
@@ -170,8 +156,8 @@ class ControladorMovimentacao:
                             self.__movimentacao.vagas -= 1
                         else:
                             raise BicicletarioLotadoException
-                    self.__telaMovimentacao.modifica_registro(True)
-        if opcao == "3":
+                    self.__popups.default("Sucesso", "Registro excluido")
+        if tipo_registro == TipoRegistro.ESPECIAL:
             raise CodigoInvalidoException
         else:
             raise MatriculaInvalidaException
