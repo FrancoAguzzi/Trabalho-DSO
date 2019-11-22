@@ -35,8 +35,5 @@ class AbstractTela(ABC):
         self.__window.Close()
         self.__window = None
 
-    def mostra_informacao(self, info):
-        pass
-
     def limpar_tela(self):
         os.system("cls" if os.name == "nt" else "clear")

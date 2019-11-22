@@ -1,0 +1,95 @@
+[1mdiff --git a/control/controlador_cadastro.py b/control/controlador_cadastro.py[m
+[1mindex 09ed955..867020f 100644[m
+[1m--- a/control/controlador_cadastro.py[m
+[1m+++ b/control/controlador_cadastro.py[m
+[36m@@ -5,6 +5,7 @@[m [mfrom model.cadastro import Cadastro[m
+ from model.tipo import TipoPessoa[m
+ from exception.exception_cadastro import *[m
+ from persistencia.usuarioDAO import UsuarioDAO[m
+[32m+[m[32mfrom persistencia.segurancaDAO import SegurancaDAO[m
+ [m
+ class ControladorCadastro:[m
+ [m
+[36m@@ -12,6 +13,7 @@[m [mclass ControladorCadastro:[m
+         self.__cadastro = Cadastro()[m
+         self.__telaCadastro = TelaCadastro()[m
+         self.__usuario_dao = UsuarioDAO()[m
+[32m+[m[32m        self.__seguranca_dao = SegurancaDAO()[m
+ [m
+     @property[m
+     def cadastro(self):[m
+[36m@@ -29,10 +31,10 @@[m [mclass ControladorCadastro:[m
+ [m
+     def exclui_usuario(self):[m
+         respostas = self.__telaCadastro.excluir()[m
+[31m-        for usuario in self.__cadastro.usuarios:[m
+[32m+[m[32m        for usuario in self.__usuario_dao.get_all():[m
+             if usuario.matricula == respostas["id"]:[m
+                 # Faltou validação se o usuário não está em um registro[m
+[31m-                self.__cadastro.usuarios.remove(usuario)[m
+[32m+[m[32m                self.__usuario_dao.remove(usuario)[m
+                 return usuario[m
+         raise MatriculaInvalidaException[m
+ [m
+[36m@@ -60,7 +62,7 @@[m [mclass ControladorCadastro:[m
+         for seg in self.__cadastro.segurancas:[m
+             if seguranca.codigo == seg.codigo:[m
+                 raise SegurancaDuplicadoException[m
+[31m-        self.__cadastro.segurancas.append(seguranca)[m
+[32m+[m[32m        self.__seguranca_dao.add(seguranca)[m
+         return seguranca[m
+ [m
+     def exclui_seguranca(self):[m
+[36m@@ -68,7 +70,7 @@[m [mclass ControladorCadastro:[m
+         for seguranca in self.__cadastro.segurancas:[m
+             if seguranca.codigo == int(respostas["id"]):[m
+                 # Faltou validação se o segurança não está em um registro[m
+[31m-                self.__cadastro.segurancas.remove(seguranca)[m
+[32m+[m[32m                self.__seguranca_dao.remove(seguranca)[m
+                 return[m
+         raise CodigoInvalidoException[m
+ [m
+[36m@@ -88,4 +90,4 @@[m [mclass ControladorCadastro:[m
+             raise CodigoInvalidoException[m
+ [m
+     def lista_segurancas(self):[m
+[31m-        self.__telaCadastro.lista_pessoas(self.__cadastro.segurancas)[m
+[32m+[m[32m        self.__telaCadastro.lista_pessoas(self.__seguranca_dao.get_all())[m
+[1mdiff --git a/persistencia/segurancaDAO.py b/persistencia/segurancaDAO.py[m
+[1mindex 1d7abe3..4cb707d 100644[m
+[1m--- a/persistencia/segurancaDAO.py[m
+[1m+++ b/persistencia/segurancaDAO.py[m
+[36m@@ -1,5 +1,5 @@[m
+ import pickle[m
+[31m-from abstract_dao import AbstractDAO[m
+[32m+[m[32mfrom persistencia.abstract_dao import AbstractDAO[m
+ from model.seguranca import Seguranca[m
+ [m
+ class SegurancaDAO(AbstractDAO):[m
+[36m@@ -8,14 +8,12 @@[m [mclass SegurancaDAO(AbstractDAO):[m
+         super().__init__('segurancas.pkl')[m
+ [m
+     def add(self, seguranca: Seguranca):[m
+[31m-        if (isinstance(usuario.matricula, int)) and (usuario is not None) \[m
+[31m-            and (isinstance(usuario, Usuario)):[m
+[31m-            super().add(usuario.matricula, usuario)[m
+[32m+[m[32m        super().add(seguranca.codigo, seguranca)[m
+ [m
+[31m-    def get(self, matricula):[m
+[31m-        if (isinstance(matricula, int)):[m
+[31m-            return super().get(matricula)[m
+[32m+[m[32m    def get(self, codigo):[m
+[32m+[m[32m        if (isinstance(codigo, int)):[m
+[32m+[m[32m            return super().get(codigo)[m
+ [m
+[31m-    def remove(self, matricula):[m
+[31m-        if (isinstance(matricula, int)):[m
+[31m-            return super().remove(matricula)[m
+\ No newline at end of file[m
+[32m+[m[32m    def remove(self, codigo):[m
+[32m+[m[32m        if (isinstance(codigo, int)):[m
+[32m+[m[32m            return super().remove(codigo)[m
+\ No newline at end of file[m
+[1mdiff --git a/usuarios.pkl b/usuarios.pkl[m
+[1mindex 1209d4b..ea8dacc 100644[m
+Binary files a/usuarios.pkl and b/usuarios.pkl differ

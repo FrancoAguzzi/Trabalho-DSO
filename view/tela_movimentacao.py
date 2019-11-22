@@ -1,6 +1,4 @@
 from view.abstract_tela import AbstractTela
-from model.tipo import TipoRegistro
-from getpass import getpass
 import PySimpleGUI as sg
 
 class TelaMovimentacao(AbstractTela):
