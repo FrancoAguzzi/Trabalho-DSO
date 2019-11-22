@@ -12,6 +12,7 @@ from model.tipo import TipoPessoa
 from control.controlador_cadastro import ControladorCadastro
 from view.popups import Popups
 
+
 class ControladorMovimentacao:
 
     def __init__(self, controlador_cadastro: ControladorCadastro):
