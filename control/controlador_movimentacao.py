@@ -62,7 +62,7 @@ class ControladorMovimentacao:
             usuarios = self.__controladorCadastro.get_usuarios()
             for usuario in usuarios:
                 if usuario.matricula == identificador:
-                    for registro in reversed(self.__registros_dao.get_all()):
+                    for registro in reversed(list(self.registros)):
                         if registro.matricula == identificador:
                             if registro.tipo == TipoRegistro.ENTRADA:
                                 self.__movimentacao.vagas += 1
@@ -71,7 +71,7 @@ class ControladorMovimentacao:
                                              tipo=TipoRegistro.SAIDA,
                                              matricula=identificador
                                              ))
-                                self.__popups.default(title="Sucesso", message="Retire sua bicicleta")
+                                self.__popups.default(title="Acesso Liberado", message="Retire sua bicicleta " + usuario.nome)
                             else:
                                 if self.__movimentacao.vagas > 0:
                                     self.__movimentacao.vagas -= 1
@@ -80,10 +80,9 @@ class ControladorMovimentacao:
                                                  tipo=TipoRegistro.ENTRADA,
                                                  matricula=identificador
                                                  ))
-                                    self.__popups.default(title="Sucesso", message="Coloque sua bicicleta em um local disponível")
+                                    self.__popups.default(title="Acesso Liberado", message="Coloque sua bicicleta em um local disponível " + usuario.nome)
                                 else:
                                     raise BicicletarioLotadoException
-                            self.__popups.default(title="Acesso Liberado", message=usuario.nome)
                             return
                     if self.__movimentacao.vagas > 0:
                         self.__movimentacao.vagas -= 1
@@ -92,8 +91,7 @@ class ControladorMovimentacao:
                                      tipo=TipoRegistro.ENTRADA,
                                      matricula=identificador
                                      ))
-                        self.__popups.default(title="Sucesso", message="Coloque sua bicicleta em um local disponível")
-                        self.__popups.default(title="Acesso Liberado", message=usuario.nome)
+                        self.__popups.default(title="Acesso Liberado", message="Coloque sua bicicleta em um local disponível " + usuario.nome)
                         return
                     else:
                         raise BicicletarioLotadoException
@@ -129,7 +127,7 @@ class ControladorMovimentacao:
             "mensagem": "Alterar o acesso de:"
         })
 
-        for registro in self.__registros_dao.get_all():
+        for registro in list(self.registros):
             if registro.tipo == TipoRegistro(int(opcao)):
                 if registro.matricula == id_pessoa:
                     if registro.tipo == TipoRegistro.ENTRADA:
@@ -161,7 +159,7 @@ class ControladorMovimentacao:
             "mensagem": "Remover o acesso de:"
         })
 
-        for registro in self.__registros_dao.get_all():
+        for registro in list(self.registros):
             if registro.tipo == TipoRegistro(int(opcao)):
                 if registro.matricula == id_pessoa or registro.codigo == int(id_pessoa):
                     self.__registros_dao.remove(registro)

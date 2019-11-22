@@ -43,7 +43,7 @@ class ControladorSistema:
         return filter(lambda r: getattr(r, filtro["chave"]) == filtro["valor"], registros)
 
     def relatorio(self, filtro=None):
-        registros = self.__sistema.movimentacao.registros
+        registros = self.__controladorMovimentacao.registros
         if filtro is not None:
             registros = self.aplica_filtro(filtro, registros)
         self.__telaFiltros.unhide()
