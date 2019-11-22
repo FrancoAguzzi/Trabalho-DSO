@@ -11,9 +11,9 @@ class UsuarioDAO(AbstractDAO):
         super().add(usuario.matricula, usuario)
 
     def get(self, matricula):
-        if (isinstance(matricula, int)):
+        if (isinstance(matricula, str)):
             return super().get(matricula)
 
     def remove(self, matricula):
-        if (isinstance(matricula, int)):
+        if (isinstance(matricula, str)):
             return super().remove(matricula)
