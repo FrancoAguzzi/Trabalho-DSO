@@ -16,10 +16,8 @@ class ControladorCadastro:
         self.__seguranca_dao = SegurancaDAO()
 
 
-    ### CONTROLADOR CADASTRO NÃO FAZ MAIS USO DE CADASTRO()
-    @property
-    def cadastro(self):
-        return self.__cadastro
+    def cadastros(self):
+        return self.__usuario_dao.get_all(), self.__seguranca_dao.get_all()
 
     def get_usuarios(self):
         return self.__usuario_dao.get_all()

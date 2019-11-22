@@ -9,10 +9,14 @@ class TelaFiltro(AbstractTela):
         super().__init__()
 
     def components(self, registros=None, cadastros=None):
-        if cadastros is None:
-            cadastros = []
         if registros is None:
             registros = []
+
+        usuarios = []
+        segurancas = []
+
+        if cadastros:
+            usuarios, segurancas = cadastros
 
         lista_registros = ["Timestamp  -  Ident.  -  Nome  -  Tipo Pessoa  -  Tipo"]
 
@@ -20,14 +24,18 @@ class TelaFiltro(AbstractTela):
             tipo_pessoa = TipoPessoa.USUARIO if registro.matricula is not None else TipoPessoa.SEGURANCA
             if tipo_pessoa == tipo_pessoa.USUARIO:
                 identificador = registro.matricula
-                nome = next(filter(lambda c:
-                                   c.matricula == registro.matricula, cadastros.usuarios
-                                   ), "Não encontrado").nome
+                pessoa = next(filter(lambda c: c.matricula == registro.matricula, usuarios))
+                if pessoa is None:
+                    nome = "Não encontrado"
+                else:
+                    nome = pessoa.nome
             else:
                 identificador = str(registro.codigo)
-                nome = next(filter(lambda c:
-                                   c.codigo == registro.codigo, cadastros.segurancas
-                                   ), "Não encontrado").nome
+                pessoa = next(filter(lambda c: c.codigo == registro.codigo, cadastros.segurancas))
+                if pessoa is None:
+                    nome = "Não encontrado"
+                else:
+                    nome = pessoa.nome
 
             lista_registros.append(
                 registro.timestamp.strftime("%d-%m-%Y %H:%M:%S")

@@ -1,16 +1,16 @@
 class Sistema:
 
-    def __init__(self, cadastro, movimentacao):
-        self.__cadastro = cadastro
+    def __init__(self, cadastros, movimentacao):
+        self.__cadastros = cadastros
         self.__movimentacao = movimentacao
 
     @property
-    def cadastro(self):
-        return self.__cadastro
+    def cadastros(self):
+        return self.__cadastros
 
-    @cadastro.setter
-    def cadastro(self, cadastro):
-        self.__cadastro = cadastro
+    @cadastros.setter
+    def cadastros(self, cadastros):
+        self.__cadastros = cadastros
 
     @property
     def movimentacao(self):

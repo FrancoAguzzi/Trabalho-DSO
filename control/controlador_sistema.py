@@ -25,7 +25,7 @@ class ControladorSistema:
         self.__selectTipoRegistro = SelectTipoRegistro()
         self.__popups = Popups()
         self.__sistema = Sistema(
-            cadastro=self.__controladorCadastro.cadastro,
+            cadastros=self.__controladorCadastro.cadastros(),
             movimentacao=self.__controladorMovimentacao.movimentacao
         )
 
@@ -47,7 +47,7 @@ class ControladorSistema:
         if filtro is not None:
             registros = self.aplica_filtro(filtro, registros)
         self.__telaFiltros.unhide()
-        self.__telaFiltros.components(registros, self.__sistema.cadastro)
+        self.__telaFiltros.components(registros, self.__sistema.cadastros)
         self.__telaFiltros.open()
         self.__telaFiltros.hide()
         self.retornar()
