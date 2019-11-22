@@ -44,10 +44,8 @@ class ControladorMovimentacao:
                 identificador = values['input']
                 break
             if button == 'Limpar':
-                print('Limpar')
                 keys_entered = ''
             elif button in ('1', '2', '3', '4', '5', '6', '7', '8', '9', '0'):
-                print('Button In')
                 keys_entered = values['input']
                 keys_entered += button
             self.__telaAcesso.window.FindElement('input').Update(keys_entered)

@@ -151,7 +151,6 @@ class ControladorSistema:
         self.__telaSistema.unhide()
         button, values = self.__telaSistema.open()
         self.__telaSistema.hide()
-        print(button)
         switcher = {
             'Sair': self.finalizar,
             'Cadastro': self.menu_cadastro,

@@ -8,7 +8,6 @@ class TelaSistema(AbstractTela):
         super().__init__()
 
     def components(selfs):
-        print("components sistema")
         layout = [[sg.Button('Cadastro', size=(15, 2)), sg.Button('Relatório', size=(15, 2))],
                   [sg.Button('Movimentação', size=(15, 2)), sg.Button('Sair', size=(15, 2))]]
 
