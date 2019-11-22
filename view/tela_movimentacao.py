@@ -13,9 +13,3 @@ class TelaMovimentacao(AbstractTela):
                   [sg.Button('Excluir', size=(10, 1)), sg.Button('Atualizar', size=(10 ,1)), sg.Button('Início', size=(10, 1))]]
 
         self.window = sg.Window('Menu Movimentação').Layout(layout)
-
-    def modifica_registro(self, n=False):
-        acao = "alterado"
-        if n:
-            acao = "removido"
-        return "Registro " + acao + " com sucesso!"
