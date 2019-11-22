@@ -1,6 +1,8 @@
 from model.usuario import Usuario
 from model.seguranca import Seguranca
 from view.tela_cadastro import TelaCadastro
+from view.form_cadastro import FormCadastro
+from view.popups import Popups
 from model.cadastro import Cadastro
 from model.tipo import TipoPessoa
 from exception.exception_cadastro import *
@@ -11,11 +13,13 @@ class ControladorCadastro:
 
     def __init__(self):
         self.__telaCadastro = TelaCadastro()
+        self.__formCadastro = FormCadastro()
         self.__cadastro = Cadastro()
         self.__usuario_dao = UsuarioDAO()
         self.__seguranca_dao = SegurancaDAO()
+        self.__popups = Popups()
 
-
+    @property
     def cadastros(self):
         return self.__usuario_dao.get_all(), self.__seguranca_dao.get_all()
 
@@ -25,77 +29,96 @@ class ControladorCadastro:
     def get_segurancas(self):
         return self.__seguranca_dao.get_all()
 
-    def inclui_usuario(self, respostas=None):
-        if respostas is None:
-            respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.USUARIO)
-        usuario = Usuario(respostas["nome"], respostas["telefone"], respostas["matricula"])
+    def inclui_usuario(self):
+        self.__formCadastro.unhide()
+        self.__formCadastro.components(tipo=TipoPessoa.USUARIO)
+        button, values = self.__formCadastro.open()
+        self.__formCadastro.hide()
+        usuario = Usuario(values["nome"], values["telefone"], values["matricula"])
         for user in self.__usuario_dao.get_all():
             if usuario.matricula == user.matricula:
                 raise UsuarioDuplicadoException
         self.__usuario_dao.add(usuario)
         return usuario
 
-    def exclui_usuario(self): #NOT WORKING
-        respostas = self.__telaCadastro.excluir()
-        for usuario in self.__usuario_dao.get_all():
-            if usuario.matricula == respostas["id"]:
-                # Faltou validação se o usuário não está em um registro
-                self.__usuario_dao.remove(usuario)
-                return usuario
-        raise MatriculaInvalidaException
+    def exclui_usuario(self):
+        text = self.__popups.simple_input("Identificador", "Excluir")
+
+        if text is None:
+            return
+
+        button = self.__popups.confirm("Confirmar", "Deseja excluir o usuário com matrícula: " + text)
+
+        if button == "Yes":
+            usuario = self.__usuario_dao.get(text)
+            if usuario:
+                self.__usuario_dao.remove(usuario.matricula)
+                return
+            raise MatriculaInvalidaException
 
     def atualiza_usuario(self):
         atualizado = False
-        respostas = self.__telaCadastro.cadastro(novo=False, tipo=TipoPessoa.USUARIO)
+
+        self.__formCadastro.unhide()
+        self.__formCadastro.components(tipo=TipoPessoa.USUARIO, novo=False)
+        button, values = self.__formCadastro.open()
+        self.__formCadastro.hide()
+
         for usuario in self.__usuario_dao.get_all():
-            if usuario.matricula == respostas["matricula"]:
+            if usuario.matricula == values["matricula"]:
                 atualizado = True
-                if respostas["nome"]:
-                    usuario.nome = respostas["nome"]
-                if respostas["telefone"]:
-                    usuario.telefone = respostas["telefone"]
+                if values["nome"]:
+                    usuario.nome = values["nome"]
+                if values["telefone"]:
+                    usuario.telefone = values["telefone"]
         if not atualizado:
             raise MatriculaInvalidaException
 
-    def lista_usuarios(self):
-        self.__telaCadastro.lista_pessoas(self.__usuario_dao.get_all())
-
-    def inclui_seguranca(self, respostas=None):
-        if respostas is None:
-            respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.SEGURANCA)
-        seguranca = Seguranca(respostas["nome"], respostas["telefone"],
-                              respostas["senha_especial"], respostas["codigo"])
-        if self.__seguranca_dao.get(respostas["codigo"]):
+    def inclui_seguranca(self):
+        self.__formCadastro.unhide()
+        self.__formCadastro.components(tipo=TipoPessoa.SEGURANCA)
+        button, values = self.__formCadastro.open()
+        self.__formCadastro.hide()
+        seguranca = Seguranca(values["nome"], values["telefone"],
+                              values["senha_especial"], values["codigo"])
+        if self.__seguranca_dao.get(values["codigo"]):
             raise SegurancaDuplicadoException
         self.__seguranca_dao.add(seguranca)
         return seguranca
 
-    def exclui_seguranca(self): #NOT WORKING
-        respostas = self.__telaCadastro.excluir()
-        if self.__seguranca_dao.get(int(respostas["id"])):
-            print(self.__seguranca_dao.get((respostas["id"])))
-            # Faltou validação se o segurança não está em um registro
-            self.__seguranca_dao.remove(seguranca)
+    def exclui_seguranca(self):
+        text = self.__popups.simple_input("Identificador", "Excluir")
+        if text is None:
             return
-        raise CodigoInvalidoException
+
+        button = self.__popups.confirm("Confirmar", "Deseja excluir o usuário com matrícula: " + text)
+
+        if button == "Yes":
+            seguranca = self.__seguranca_dao.get(int(text))
+            if seguranca:
+                self.__seguranca_dao.remove(seguranca.codigo)
+                return
+            raise CodigoInvalidoException
 
     def atualiza_seguranca(self):
         atualizado = False
-        respostas = self.__telaCadastro.cadastro(tipo=TipoPessoa.SEGURANCA, novo=False)
+
+        self.__formCadastro.unhide()
+        self.__formCadastro.components(tipo=TipoPessoa.SEGURANCA, novo=False)
+        button, values = self.__formCadastro.open()
+        self.__formCadastro.hide()
+
         for seguranca in self.__seguranca_dao.get_all():
-            if seguranca.codigo == respostas["codigo"]:
+            if seguranca.codigo == values["codigo"]:
                 atualizado = True
-                if respostas["nome"]:
-                    seguranca.nome = respostas["nome"]
-                if respostas["telefone"]:
-                    seguranca.telefone = respostas["telefone"]
-                if respostas["senha_especial"]:
-                    seguranca.senha_especial = respostas["senha_especial"]
+                if values["nome"]:
+                    seguranca.nome = values["nome"]
+                if values["telefone"]:
+                    seguranca.telefone = values["telefone"]
+                if values["senha_especial"]:
+                    seguranca.senha_especial = values["senha_especial"]
         if not atualizado:
             raise CodigoInvalidoException
-
-    def lista_segurancas(self):
-        self.__telaCadastro.lista_pessoas(self.__seguranca_dao.get_all())
 
     def menu(self, tipo):
         if tipo == TipoPessoa.USUARIO:
