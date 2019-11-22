@@ -11,6 +11,7 @@ from exception.exception_movimentacao import *
 from exception.exception_sistema import *
 from view.popups import  Popups
 from view.tela_relatorio import TelaRelatorio
+from view.tela_filtros import TelaFiltro
 
 class ControladorSistema:
 
@@ -19,6 +20,7 @@ class ControladorSistema:
         self.__controladorMovimentacao = ControladorMovimentacao(self.__controladorCadastro)
         self.__telaSistema = TelaSistema()
         self.__telaRelatorio = TelaRelatorio()
+        self.__telaFiltros = TelaFiltro()
         self.__selectTipoPessoa = SelectTipoPessoa()
         self.__selectTipoRegistro = SelectTipoRegistro()
         self.__popups = Popups()
@@ -44,7 +46,10 @@ class ControladorSistema:
         registros = self.__sistema.movimentacao.registros
         if filtro is not None:
             registros = self.aplica_filtro(filtro, registros)
-        self.__telaSistema.lista_relatorio(registros, self.__sistema.cadastro)
+        self.__telaFiltros.unhide()
+        self.__telaFiltros.components(registros, self.__sistema.cadastro)
+        self.__telaFiltros.open()
+        self.__telaFiltros.hide()
         self.retornar()
 
     def finalizar(self):
