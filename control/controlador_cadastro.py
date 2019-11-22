@@ -30,10 +30,10 @@ class ControladorCadastro:
         return self.__seguranca_dao.get_all()
 
     def inclui_usuario(self):
-        self.__formCadastro.unhide()
         self.__formCadastro.components(tipo=TipoPessoa.USUARIO)
         button, values = self.__formCadastro.open()
-        self.__formCadastro.hide()
+        self.__formCadastro.close()
+
         usuario = Usuario(values["nome"], values["telefone"], values["matricula"])
         for user in self.__usuario_dao.get_all():
             if usuario.matricula == user.matricula:
@@ -75,10 +75,9 @@ class ControladorCadastro:
             raise MatriculaInvalidaException
 
     def inclui_seguranca(self):
-        self.__formCadastro.unhide()
         self.__formCadastro.components(tipo=TipoPessoa.SEGURANCA)
         button, values = self.__formCadastro.open()
-        self.__formCadastro.hide()
+        self.__formCadastro.close()
         seguranca = Seguranca(values["nome"], values["telefone"],
                               values["senha_especial"], values["codigo"])
         if self.__seguranca_dao.get(values["codigo"]):
