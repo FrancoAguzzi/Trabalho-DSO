@@ -137,7 +137,7 @@ pip-selfcheck.json
 *.iws
 
 ## Plugin-specific files:
-
+.vscode
 # IntelliJ
 /out/
 
