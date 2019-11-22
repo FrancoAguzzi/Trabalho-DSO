@@ -11,6 +11,7 @@ from view.select_tipo import SelectTipoPessoa
 from model.tipo import TipoPessoa
 from control.controlador_cadastro import ControladorCadastro
 from view.popups import Popups
+from persistencia.registroDAO import RegistroDAO
 
 
 class ControladorMovimentacao:
@@ -22,6 +23,7 @@ class ControladorMovimentacao:
         self.__telaAcesso = TelaAcesso()
         self.__selectTipoPessoa = SelectTipoPessoa()
         self.__popups = Popups()
+        self.__registros_dao = RegistroDAO()
 
     @property
     def movimentacao(self):
@@ -29,7 +31,7 @@ class ControladorMovimentacao:
 
     @property
     def registros(self):
-        return self.__movimentacao.registros
+        return self.__registros_dao.get_all()
 
     def controle_console(self, senha=False):
         self.__telaAcesso.components(senha)
@@ -60,11 +62,11 @@ class ControladorMovimentacao:
             usuarios = self.__controladorCadastro.get_usuarios()
             for usuario in usuarios:
                 if usuario.matricula == identificador:
-                    for registro in reversed(self.__movimentacao.registros):
+                    for registro in reversed(self.__registros_dao.get_all()):
                         if registro.matricula == identificador:
                             if registro.tipo == TipoRegistro.ENTRADA:
                                 self.__movimentacao.vagas += 1
-                                self.__movimentacao.registros.append(
+                                self.__registros_dao.add(
                                     Registro(timestamp=datetime.now(),
                                              tipo=TipoRegistro.SAIDA,
                                              matricula=identificador
@@ -73,7 +75,7 @@ class ControladorMovimentacao:
                             else:
                                 if self.__movimentacao.vagas > 0:
                                     self.__movimentacao.vagas -= 1
-                                    self.__movimentacao.registros.append(
+                                    self.__registros_dao.add(
                                         Registro(timestamp=datetime.now(),
                                                  tipo=TipoRegistro.ENTRADA,
                                                  matricula=identificador
@@ -85,7 +87,7 @@ class ControladorMovimentacao:
                             return
                     if self.__movimentacao.vagas > 0:
                         self.__movimentacao.vagas -= 1
-                        self.__movimentacao.registros.append(
+                        self.__registros_dao.add(
                             Registro(timestamp=datetime.now(),
                                      tipo=TipoRegistro.ENTRADA,
                                      matricula=identificador
@@ -101,7 +103,7 @@ class ControladorMovimentacao:
             senha = self.controle_console(senha=True)
             for seguranca in segurancas:
                 if seguranca.codigo == int(identificador) and seguranca.senha_especial == senha:
-                    self.__movimentacao.registros.append(
+                    self.__registros_dao.add(
                         Registro(timestamp=datetime.now(),
                                  tipo=TipoRegistro.ESPECIAL,
                                  codigo=identificador
@@ -127,7 +129,7 @@ class ControladorMovimentacao:
             "mensagem": "Alterar o acesso de:"
         })
 
-        for registro in self.__movimentacao.registros:
+        for registro in self.__registros_dao.get_all():
             if registro.tipo == TipoRegistro(int(opcao)):
                 if registro.matricula == id_pessoa:
                     if registro.tipo == TipoRegistro.ENTRADA:
@@ -159,10 +161,10 @@ class ControladorMovimentacao:
             "mensagem": "Remover o acesso de:"
         })
 
-        for registro in self.__movimentacao.registros:
+        for registro in self.__registros_dao.get_all():
             if registro.tipo == TipoRegistro(int(opcao)):
                 if registro.matricula == id_pessoa or registro.codigo == int(id_pessoa):
-                    self.__movimentacao.registros.remove(registro)
+                    self.__registros_dao.remove(registro)
                     if registro.tipo == TipoRegistro.ENTRADA:
                         self.__movimentacao.vagas += 1
                     if registro.tipo == TipoRegistro.SAIDA:

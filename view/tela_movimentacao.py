@@ -2,6 +2,7 @@ from view.abstract_tela import AbstractTela
 from model.tipo import TipoRegistro
 from getpass import getpass
 import PySimpleGUI as sg
+from persistencia.registroDAO import RegistroDAO
 
 
 class TelaMovimentacao(AbstractTela):
@@ -15,9 +16,9 @@ class TelaMovimentacao(AbstractTela):
 
         self.window = sg.Window('Menu Movimentação').Layout(layout)
 
-    def lista_registros(self, registros, tipo_registro: TipoRegistro):
+    def lista_registros(self, tipo_registro: TipoRegistro):
         print("Lista " + tipo_registro.name + ": ")
-        for registro in registros:
+        for registro in RegistroDAO.get_all():
             if registro.tipo == TipoRegistro:
                 print(registro)
 
