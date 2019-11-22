@@ -1,4 +1,4 @@
-from abstract_dao import AbstractDAO
+from persistencia.abstract_dao import AbstractDAO
 import pickle
 from model.registro import *
 
