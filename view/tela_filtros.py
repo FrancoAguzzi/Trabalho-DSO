@@ -24,14 +24,14 @@ class TelaFiltro(AbstractTela):
             tipo_pessoa = TipoPessoa.USUARIO if registro.matricula is not None else TipoPessoa.SEGURANCA
             if tipo_pessoa == tipo_pessoa.USUARIO:
                 identificador = registro.matricula
-                pessoa = next(filter(lambda c: c.matricula == registro.matricula, usuarios))
+                pessoa = next(filter(lambda c: c.matricula == registro.matricula, usuarios), None)
                 if pessoa is None:
                     nome = "Não encontrado"
                 else:
                     nome = pessoa.nome
             else:
                 identificador = str(registro.codigo)
-                pessoa = next(filter(lambda c: c.codigo == registro.codigo, cadastros.segurancas))
+                pessoa = next(filter(lambda c: c.codigo == registro.codigo, segurancas), None)
                 if pessoa is None:
                     nome = "Não encontrado"
                 else:
