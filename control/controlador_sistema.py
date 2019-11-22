@@ -83,7 +83,8 @@ class ControladorSistema:
             timestamp = datetime.strptime(valor, "%d-%m-%Y")
             self.relatorio({"chave": "timestamp", "valor": timestamp})
         else:
-            raise OpcaoInvalidaException
+            self.__popups.error("Erro", "Opção Inválida")
+            self.retornar()
 
     def menu_cadastro(self):
         tipo_pessoa = self.__selectTipoPessoa.open()
@@ -106,15 +107,20 @@ class ControladorSistema:
             funcao_escolhida()
             self.menu_cadastro()
         except (KeyError, ValueError, OpcaoInvalidaException):
-            raise OpcaoInvalidaException
+            self.__popups.error("Erro", "Opção Inválida")
+            self.retornar()
         except MatriculaInvalidaException:
-            raise MatriculaInvalidaException
+            self.__popups.error("Erro", "Matrícula Inválida")
+            self.retornar()
         except UsuarioDuplicadoException:
-            raise UsuarioDuplicadoException
+            self.__popups.error("Erro", "Usuário já existe")
+            self.retornar()
         except CodigoInvalidoException:
-            raise CodigoInvalidoException
+            self.__popups.error("Erro", "Código Inválido")
+            self.retornar()
         except SegurancaDuplicadoException:
-            raise SegurancaDuplicadoException
+            self.__popups.error("Erro", "Segurança já existe")
+            self.retornar()
 
     def menu_movimentacao(self):
         button, values = self.__controladorMovimentacao.menu()
@@ -129,13 +135,17 @@ class ControladorSistema:
             funcao_escolhida()
             self.menu_movimentacao()
         except (KeyError, ValueError, OpcaoInvalidaException):
-            raise OpcaoInvalidaException
+            self.__popups.error("Erro", "Opção Inválida")
+            self.retornar()
         except CodigoSenhaInvalidoException:
-            raise CodigoSenhaInvalidoException
+            self.__popups.error("Erro", "Código e/ou Senha Inválido(s)")
+            self.retornar()
         except MatriculaInvalidaException:
-            raise MatriculaInvalidaException
+            self.__popups.error("Erro", "Matrícula Inválida")
+            self.retornar()
         except BicicletarioLotadoException:
-            raise BicicletarioLotadoException
+            self.__popups.error("Erro", "Bicicletário Lotado")
+            self.retornar()
 
     def inicia(self):
         self.__telaSistema.unhide()
