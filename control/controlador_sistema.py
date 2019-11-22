@@ -152,4 +152,5 @@ class ControladorSistema:
             funcao_escolhida = switcher[button]
             funcao_escolhida()
         except (KeyError, ValueError, OpcaoInvalidaException):
-                raise OpcaoInvalidaException
+            self.__popups.error("Erro", "Opção Inválida")
+            self.retornar()
