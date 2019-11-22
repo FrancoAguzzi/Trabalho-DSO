@@ -33,6 +33,7 @@ class AbstractTela(ABC):
 
     def close(self):
         self.__window.Close()
+        self.__window = None
 
     def mostra_informacao(self, info):
         pass
