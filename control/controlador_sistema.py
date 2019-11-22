@@ -46,10 +46,9 @@ class ControladorSistema:
         registros = self.__controladorMovimentacao.registros
         if filtro is not None:
             registros = self.aplica_filtro(filtro, registros)
-        self.__telaFiltros.unhide()
         self.__telaFiltros.components(registros, self.__sistema.cadastros)
         self.__telaFiltros.open()
-        self.__telaFiltros.hide()
+        self.__telaFiltros.close()
         self.retornar()
 
     def finalizar(self):
@@ -59,9 +58,9 @@ class ControladorSistema:
         self.inicia()
 
     def menu_relatorio(self):
-        self.__telaRelatorio.unhide()
+        self.__telaRelatorio.components()
         button, values = self.__telaRelatorio.open()
-        self.__telaRelatorio.hide()
+        self.__telaRelatorio.close()
 
         if button == 'Início':
             self.retornar()
@@ -128,8 +127,8 @@ class ControladorSistema:
         switcher = {
             'Início': self.retornar,
             'Acessar': self.__controladorMovimentacao.acesso,
-            'Atualiza': self.__controladorMovimentacao.atualiza_acesso,
-            'Exclui': self.__controladorMovimentacao.exclui_acesso,
+            'Atualizar': self.__controladorMovimentacao.atualiza_acesso,
+            'Excluir': self.__controladorMovimentacao.exclui_acesso,
         }
         try:
             funcao_escolhida = switcher[button]
